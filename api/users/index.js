@@ -12,7 +12,7 @@ router.post('/', [
 ]);
 
 router.put('/:id', [
-    UserController.isPasswordAndUserMatch,
+    UserController.isPasswordAndEmailMatch,
     UserController.update
 ])
 
