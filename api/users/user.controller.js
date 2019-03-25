@@ -1,6 +1,12 @@
 const crypto = require("crypto");
 const UserModel = require("../../models/User");
 
+exports.get = (req, res) => {
+    UserModel.find().then(result => {
+      res.status(200).json(result);
+    })
+};
+
 exports.getById = (req, res) => {
   UserModel.findById(req.params.id)
     .then(user => {
@@ -30,7 +36,7 @@ exports.insert = (req, res) => {
 exports.update = (req, res) => {
   UserModel.findById(req.params.id)
     .then(user => {
-      
+
       if (req.body['newPassword']) {
         const salt = crypto.randomBytes(16).toString("base64");
         const hash = crypto
@@ -38,14 +44,14 @@ exports.update = (req, res) => {
           .update(req.body.newPassword)
           .digest("base64");
         user.password = salt + "$" + hash;
-        
+
       }
       delete req.body.password;
       delete req.body.newPassword;
 
-      for (let property in req.body) 
+      for (let property in req.body)
         user[property] = req.body[property];
-      
+
       user.save((err, updatedUser) => {
         if (err) res.status(400).send(err);
         else {

@@ -3,6 +3,10 @@ const  UserController  = require('./user.controller');
 
 const router = new Router();
 
+router.get('/', [
+    UserController.get
+]);
+
 router.get('/:id', [
     UserController.getById
 ]);
@@ -14,6 +18,6 @@ router.post('/', [
 router.put('/:id', [
     UserController.isPasswordAndEmailMatch,
     UserController.update
-])
+]);
 
 module.exports = router;
