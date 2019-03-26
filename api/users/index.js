@@ -12,8 +12,9 @@ router.post('/', [
 ]);
 
 router.put('/:id', [
+    UserController.isAuth,
     UserController.isPasswordAndEmailMatch,
     UserController.update
-])
+]);
 
 module.exports = router;
