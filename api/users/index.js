@@ -17,8 +17,14 @@ router.post('/', [
 
 router.put('/:id', [
     UserController.isAuth,
-    UserController.isPasswordAndEmailMatch,
+    UserController.isAuthUserOwner,
     UserController.update
+]);
+
+router.delete('/:id', [
+    UserController.isAuth,
+    UserController.isAuthUserOwner,
+    UserController.delete
 ]);
 
 module.exports = router;
