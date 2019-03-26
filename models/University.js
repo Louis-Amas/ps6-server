@@ -17,8 +17,11 @@ const UniversitySchema = new Schema({
   url_to_website: {
       type: String,
       required: [true, 'Url is required']
-  },
-  courses: [{type: Schema.Types.ObjectId, ref: 'course'}]
+  }
 });
 
 mongoose.model('university', UniversitySchema);
+
+const University = mongoose.model('university');
+
+module.exports = University;
