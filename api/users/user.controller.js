@@ -97,8 +97,7 @@ exports.update = (req, res) => {
 };
 
 exports.isAuthUserOwner = (req, res, next) => {
-
-    if (req.body.connectedUserId === req.params.id)
+    if (req.body.connectedUser._id.toString() === req.params.id)
         return next();
     return res.status(401).json("Unauthorized");
 };
@@ -125,7 +124,7 @@ exports.isAuth = (req, res, next) => {
                 .update(req.body.password)
                 .digest("base64");
             if (hash === passwordFields[1]) {
-                req.body.connectedUserId = user.id;
+                req.body.connectedUser = user;
                 return next();
             } else {
                 return res.status(401).send({errors: ["Invalid email or password"]});
