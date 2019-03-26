@@ -8,7 +8,7 @@ attachUser = (student) => {
             .then( (res) => {
                 console.log(res);
                 const currentUser = res;
-                const currentStudent = Object.assign({},student);
+                const currentStudent = Object.assign({},student._doc);
                 currentStudent.firstName = currentUser.firstName;
                 currentStudent.lastName = currentUser.lastName;
                 currentStudent.email = currentUser.email;
