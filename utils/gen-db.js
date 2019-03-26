@@ -23,7 +23,7 @@ u1 = new User({
     email: 'amaslouis@gmail.com',
     password: '123',
     role: 'student'
-})
+});
 
 
 
@@ -31,5 +31,5 @@ u1 = new User({
 //     if (err) {
 //         console.log('not working', err)
 //     }
-// }) 
+// })
 //uni1.save();

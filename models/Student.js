@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const StudentSchema = new Schema({
     userId: {type: Schema.Types.ObjectId, ref: 'user'},
@@ -31,5 +32,17 @@ const StudentSchema = new Schema({
 mongoose.model('student', StudentSchema);
 
 const Student = mongoose.model('student');
+
+Student.findByUserId = (id) => {
+    return new Promise((resolve, reject) => {
+        Student.find({ userId: new ObjectId(id)})
+            .then((users) => {
+                resolve(users[0]);
+            })
+            .catch(err => {
+                reject(err)
+            });
+    });
+};
 
 module.exports = Student;

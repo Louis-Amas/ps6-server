@@ -102,20 +102,28 @@ exports.isAuthUserOwner = (req, res, next) => {
     return res.status(401).json("Unauthorized");
 };
 
+/**
+ * Check if user has set Authorization headers
+ * if email and password is correct set req.body.connectedUser to current user
+ * @param req
+ * @param res
+ * @param next
+ * @return {*|Promise<any>}
+ */
 exports.isAuth = (req, res, next) => {
     const authorization = req.get('Authorization');
     if (authorization === undefined)
         return res.status(401).json('Auth error');
     const credidentials = authorization.split(':');
 
-    if (req.body.email === null)
-        res.status(400).json("Bad request");
-
     req.body.email = credidentials[0];
     req.body.password = credidentials[1];
+
+
+
     UserModel.findByEmail(req.body.email).then(user => {
         if (!user) {
-            res.status(401).send({});
+            res.status(404).send({});
         } else {
             const passwordFields = user.password.split("$");
             const salt = passwordFields[0];
