@@ -44,6 +44,11 @@ const UserSchema = new Schema({
 
 mongoose.model('user', UserSchema);
 
+UserSchema.pre('remove', (next) => {
+    const StudentModel = mongoose.model('student');
+    StudentModel.remove({ userId: this._id}).exec();
+    next();
+});
 
 const User = mongoose.model('user');
 
