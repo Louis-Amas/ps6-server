@@ -37,7 +37,7 @@ const UserSchema = new Schema({
     lastConnection: Date,
     role: {
         type: String,
-        enum: ["bri", "prof", "student"],
+        enum: ["bri", "teacher", "student"],
         required: [true, 'role is required']
     }
 });

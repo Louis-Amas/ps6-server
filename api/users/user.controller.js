@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const UserModel = require("../../models/User");
+const StudentModel = require("../../models/Student");
 
 exports.get = (req, res) => {
     UserModel.find().then(result => {
@@ -39,7 +40,19 @@ exports.insert = (req, res) => {
     req.body.password = salt + "$" + hash;
     UserModel.createUser(req.body)
         .then(result => {
-            return res.status(201).send(result);
+            const student = new StudentModel({
+               userId: result.id
+            });
+            student.save()
+                .then(newStudent => {
+                    let response = Object.assign({}, result)._doc;
+                    response.studentId = newStudent._id;
+                    delete response.__v;
+                    delete response.password;
+                    return res.status(201).json(response);
+                });
+
+
         })
         .catch(err => {
             if (err.code === 11000)
