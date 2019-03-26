@@ -3,6 +3,10 @@ const  UserController  = require('./user.controller');
 
 const router = new Router();
 
+router.get('/', [
+    UserController.get
+]);
+
 router.get('/:id', [
     UserController.getById
 ]);

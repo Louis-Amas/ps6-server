@@ -1,6 +1,12 @@
 const crypto = require("crypto");
 const UserModel = require("../../models/User");
 
+exports.get = (req, res) => {
+    UserModel.find().then(result => {
+      res.status(200).json(result);
+    })
+};
+
 
 exports.getById = (req, res) => {
   UserModel.findById(req.params.id)
