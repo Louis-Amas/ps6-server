@@ -3,9 +3,9 @@ const UserController = require('./user.controller');
 
 const router = new Router();
 
-router.get('/', [
+/*router.get('/', [
   UserController.get
-]);
+]);*/
 
 router.get('/:id', [
   UserController.getById
@@ -26,5 +26,6 @@ router.delete('/:id', [
   UserController.isAuthUserOwner,
   UserController.delete
 ]);
+
 
 module.exports = router;

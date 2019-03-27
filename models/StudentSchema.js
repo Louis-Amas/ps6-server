@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const ObjectId = require('mongoose').Types.ObjectId;
 
 const StudentSchema = new Schema({
-    userId: {type: Schema.Types.ObjectId, ref: 'user'},
     wishes: [
         {
             univeristyId: {
@@ -28,7 +26,7 @@ const StudentSchema = new Schema({
         }
     ]
 });
-
+/*
 mongoose.model('student', StudentSchema);
 
 const Student = mongoose.model('student');
@@ -43,6 +41,6 @@ Student.findByUserId = (id) => {
                 reject(err)
             });
     });
-};
+};*/
 
-module.exports = Student;
+module.exports = StudentSchema;
