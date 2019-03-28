@@ -4,13 +4,14 @@ const Schema = mongoose.Schema;
 const UniversitySchema = new Schema({
   name: {
       type: String,
+      unique: true,
       required: [true, 'Name is required']
   },
   country: {
       type: String,
       required: [true, 'Country is required']
   },
-  concernedDepartement: {
+  concernedDepartment: {
       type: [String],
       required: [true, 'Concerned departement is required']
   },
@@ -23,5 +24,16 @@ const UniversitySchema = new Schema({
 mongoose.model('university', UniversitySchema);
 
 const University = mongoose.model('university');
+
+University.createUniversity = (universityData) => {
+    return new Promise((resolve, reject) => {
+        const university = new University(universityData);
+        console.log(university);
+        university.save((err) => {
+            if (err) reject(err);
+            else resolve(university);
+        });
+    });
+};
 
 module.exports = University;
