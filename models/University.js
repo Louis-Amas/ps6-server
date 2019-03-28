@@ -36,4 +36,12 @@ University.createUniversity = (universityData) => {
     });
 };
 
+University.findByCountry = (country) => {
+    return new Promise((resolve, reject) => {
+        University.find({country: country})
+            .then(university => resolve(university))
+            .catch(err => reject(err));
+    });
+};
+
 module.exports = University;

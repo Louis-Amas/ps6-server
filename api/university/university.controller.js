@@ -10,7 +10,7 @@ exports.insert = (req, res) => {
     console.log(req.body);
     UniversityModel.createUniversity(req.body)
         .then(university => {
-            res.status(201).json(university);
+            return res.status(201).json(university);
         })
         .catch(err => {
             if (err.code === 11000)
@@ -20,4 +20,14 @@ exports.insert = (req, res) => {
                     }
                 });
         });
+};
+
+exports.getByCountry = (req, res) => {
+    UniversityModel.findByCountry(req.params.country)
+        .then(university => {
+            return res.status(200).json(university);
+        })
+        .catch( (err) => {
+            return res.status(404).json(err);
+        })
 };
