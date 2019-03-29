@@ -8,6 +8,8 @@ router.get('/', [
 ]);
 
 router.get('/:id', [
+  UserController.isAuth,
+  UserController.isAuthUserOwner,
   UserController.getById
 ]);
 
