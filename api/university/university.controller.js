@@ -22,8 +22,8 @@ exports.insert = (req, res) => {
         });
 };
 
-exports.getByCountry = (req, res) => {
-    UniversityModel.findByCountry(req.params.country)
+exports.getByCountryAndMajor = (req, res) => {
+    UniversityModel.findByCountry(req.params.country, req.params.concernedDepartment)
         .then(university => {
             return res.status(200).json(university);
         })

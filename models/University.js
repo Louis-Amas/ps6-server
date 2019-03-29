@@ -36,9 +36,9 @@ University.createUniversity = (universityData) => {
     });
 };
 
-University.findByCountry = (country) => {
+University.findByCountry = (country, concernedDepartment) => {
     return new Promise((resolve, reject) => {
-        University.find({country: country})
+        University.find({country: country, concernedDepartment: concernedDepartment})
             .then(university => resolve(university))
             .catch(err => reject(err));
     });
