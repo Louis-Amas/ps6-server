@@ -40,11 +40,11 @@ mongoose.model('course', CourseSchema);
 
 const Course = mongoose.model('course');
 
-Course.getByUnivIdAndMajor = (univeristyId, major) => {
+Course.getByUnivIdAndSemester = (univeristyId, semester) => {
   return new Promise((resolve, reject) => {
     Course.find({
       univId: mongoose.Types.ObjectId(univeristyId),
-      major: major
+      semester: semester
     }).then((courses) => resolve(courses))
       .catch(err => reject(err));
   });

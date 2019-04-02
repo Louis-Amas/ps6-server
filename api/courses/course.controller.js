@@ -17,10 +17,10 @@ const formatCourse = (course) => {
 };
 
 
-exports.getAllCourseFromUniversityIdAndMajor = (req, res) => {
-  if (!req.params.univId || !req.params.major)
+exports.getAllCourseFromUniversityIdAndSemester = (req, res) => {
+  if (!req.params.univId || !req.params.semester)
     return res.status(400).json("Bad request");
-  CourseModel.getByUnivIdAndMajor(req.params.univId, req.params.major)
+  CourseModel.getByUnivIdAndSemester(req.params.univId, req.params.semester)
     .then((courses) => {
       return res.status(200).json(formatCourses(courses));
     }).catch(err => {
