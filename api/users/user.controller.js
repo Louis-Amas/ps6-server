@@ -31,7 +31,7 @@ exports.delete = (req, res) => {
 
 exports.getById = (req, res) => {
   UserModel.findById(req.params.id,
-    (err, user) => user === null ? res.status(200).json(formatUser(user)) : res.status(404).send());
+    (err, user) => user !== null ? res.status(200).json(formatUser(user)) : res.status(404).send());
 };
 
 exports.insert = (req, res) => {
