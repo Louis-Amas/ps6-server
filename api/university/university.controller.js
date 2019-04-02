@@ -5,8 +5,7 @@ exports.get = (req, res) =>
 
 exports.getById = (req, res) =>
   UniversityModel.findById(req.params.univId)
-    .then(university => university !== null ? res.status(200).json(university) : res.status(404).send())
-    .catch(err => res.status(400).send(err));
+    .then(university => university !== null ? res.status(200).json(university) : res.status(404).send());
 
 exports.insert = (req, res) => {
     const univ = new UniversityModel(req.body);
@@ -27,13 +26,11 @@ exports.insert = (req, res) => {
 
 exports.getByCountryAndMajor = (req, res) =>
     UniversityModel.findByCountry(req.params.country, req.params.concernedDepartment)
-        .then(university =>  university !== null ? res.status(200).json(university) : res.status(404).send())
-        .catch(err => res.status(400).json(err));
+        .then(university =>  university !== null ? res.status(200).json(university) : res.status(404).send());
 
 exports.getUnivByIdAndCourseSemester = (req, res) =>
   UniversityModel.findByIdAndCourseSemester(req.params.univId, req.params.semester)
-    .then(university =>  university !== null ? res.status(200).json(university) : res.status(404).send())
-    .catch(err => res.status(404).json(err));
+    .then(university =>  university !== null ? res.status(200).json(university) : res.status(404).send());
 
 exports.insertCourseByUnivId = (req, res) =>
   UniversityModel.findById(req.params.univId)
@@ -44,9 +41,6 @@ exports.insertCourseByUnivId = (req, res) =>
       univ.save()
         .then((updateUniv) => res.status(201).json(updateUniv))
         .catch(err => res.status(err.status).send(err.msg));
-    })
-    .catch(err => {
-      res.status(400).send(err);
     });
 
 exports.deleteCourseByUnivIdAndCourseId = (req, res) =>

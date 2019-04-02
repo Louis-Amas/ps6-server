@@ -14,31 +14,24 @@ exports.returnConnectedUser = (req, res) => {
 };
 
 exports.get = (req, res) => {
-  UserModel.find().then(users => {
+  UserModel.find({}, (err, users) => {
     users = users.map(user => formatUser(user));
     return res.status(200).json(users);
   })
 };
 
 exports.delete = (req, res) => {
-  UserModel.findById(req.params.id)
-    .then((user) => {
+  UserModel.findById(req.params.id, (err, user) => {
+      if (user === null)
+        return res.status(404).send();
       user.remove();
       return res.status(200).json(formatUser(user));
     })
-    .catch((err) => {
-      return res.status(404).json(err);
-    });
 };
 
 exports.getById = (req, res) => {
-  UserModel.findById(req.params.id)
-    .then(user => {
-      res.status(200).json(formatUser(user));
-    })
-    .catch(err => {
-      res.status(404).json(err);
-    });
+  UserModel.findById(req.params.id,
+    (err, user) => user === null ? res.status(200).json(formatUser(user)) : res.status(404).send());
 };
 
 exports.insert = (req, res) => {
@@ -90,24 +83,17 @@ exports.update = (req, res) => {
           res.status(200).json(formatUser(updatedUser));
         }
       });
-    })
-    .catch(err => {
-      res.status(404).json(err);
     });
 };
 
 exports.insertWish = (req, res) => {
-  UserModel.findById(req.params.id)
-    .then(user => {
+  UserModel.findById(req.params.id, (err, user) => {
       const student = user._doc;
       student.studentInfo.wishes.push(req.body);
       user.set(student);
       user.save()
         .then((user) => res.status(201).json(formatUser(user)))
         .catch(err => res.status(400).json(err));
-    })
-    .catch(err => {
-      res.status(404).json(err);
     });
 };
 
@@ -137,9 +123,6 @@ exports.isAuth = (req, res, next) => {
 
 
   UserModel.findByEmail(req.body.email).then(user => {
-    if (!user) {
-      res.status(404).send({});
-    } else {
       const passwordFields = user.password.split("$");
       const salt = passwordFields[0];
       const hash = crypto
@@ -152,6 +135,6 @@ exports.isAuth = (req, res, next) => {
       } else {
         return res.status(401).send({errors: ["Invalid email or password"]});
       }
-    }
-  });
+    })
+    .catch(err => res.status(404).send(err));
 };
