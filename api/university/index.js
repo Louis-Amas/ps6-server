@@ -10,8 +10,8 @@ router.post('/', [
     UniversityController.insert
 ]);
 
-router.get('/:country', [
-    UniversityController.getByCountry
+router.get('/:country/:concernedDepartment', [
+    UniversityController.getByCountryAndMajor
 ]);
 
 module.exports = router;
