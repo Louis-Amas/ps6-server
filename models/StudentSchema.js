@@ -47,4 +47,16 @@ Student.findByUserId = (id) => {
     });
 };*/
 
+StudentSchema.createWish = (student, wishData) => {
+    return new Promise((resolve, reject) => {
+        student.wishes.push(wishData);
+        student.save((err) => {
+            if (err) reject(err);
+            else {
+                resolve(student);
+            }
+        });
+    });
+};
+
 module.exports = StudentSchema;
