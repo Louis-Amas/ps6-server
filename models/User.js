@@ -43,7 +43,10 @@ UserSchema = new Schema({
     enum: ["bri", "teacher", "student"],
     required: [true, 'role is required']
   },
-  studentInfo: StudentSchema
+  studentInfo:{
+    type: StudentSchema,
+    default: StudentSchema
+  }
 });
 
 UserSchema.index({ email: 1}, { unique: true});

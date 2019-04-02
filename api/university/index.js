@@ -5,6 +5,7 @@ const router = new Router();
 router.get('/', [
     UniversityController.get
 ]);
+
 router.get('/:univId', [
     UniversityController.getById
 ]);
