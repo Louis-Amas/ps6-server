@@ -20,9 +20,9 @@ exports.get = (req, res) => {
 exports.insertWish = (req, res) => {
     UserModel.findById(req.params.id)
         .then(user => {
-            console.log(user);
             const student = user._doc;
-            student.studentInfo.wishes = [req.body];
+            req.body.position = student.studentInfo.wishes.length + 1;
+            student.studentInfo.wishes.push(req.body);
             user.set(student);
             user.save()
                 .then((user) => res.status(201).json(formatStudent(user)))

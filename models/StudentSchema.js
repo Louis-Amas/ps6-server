@@ -6,29 +6,35 @@ const StudentSchema = new Schema({
       type: String,
       enum: ['SI', 'GB', 'ELEC']
     },
-    wishes: [
-        {
-            univeristyId: {
-                type: Schema.Types.ObjectId,
-                ref: 'university',
-                required: [true, 'UniversityId is required']
-            },
-            courses: [{ type: Schema.Types.ObjectId, ref: 'course' }],
-            position: Number
-        }
-    ],
-    suppDocs: [
-        {
-            name: {
-                type: String,
-                required: [true, 'suppDoc name is required']
-            },
-            data: {
-                type: Buffer,
-                require: [true, 'data is needed']
-            }
-        }
-    ]
+    wishes: {
+        type: [
+                {
+                    univeristyId: {
+                        type: Schema.Types.ObjectId,
+                        ref: 'university',
+                        unique: true,
+                        required: [true, 'UniversityId is required']
+                    },
+                    courses: [{ type: Schema.Types.ObjectId, ref: 'course' }],
+                    position: Number
+                }],
+        default: []
+    },
+    suppDocs: {
+        type: [
+                {
+                    name: {
+                        type: String,
+                        required: [true, 'suppDoc name is required']
+                    },
+                    data: {
+                        type: Buffer,
+                        require: [true, 'data is needed']
+                    }
+                }
+                ],
+        default: []
+    }
 });
 /*
 mongoose.model('student', StudentSchema);
