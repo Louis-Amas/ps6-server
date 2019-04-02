@@ -48,3 +48,13 @@ exports.insertCourseByUnivId = (req, res) =>
     .catch(err => {
       res.status(400).send(err);
     });
+
+exports.deleteCourseByUnivIdAndCourseId = (req, res) =>
+  UniversityModel.findById(req.params.univId).then(univeristy => {
+    if (univeristy === null)
+      return res.status(404).send();
+    univeristy.courses.pull(req.params.courseId);
+    univeristy.save()
+      .then(univeristyDelete => res.status(200).json(univeristyDelete))
+      .catch(err => res.status(400).send(err))
+  });
