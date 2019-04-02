@@ -6,6 +6,13 @@ const CourseSchema = new Schema({
   univId: {
     type: Schema.Types.ObjectId,
     ref: 'university',
+    validate: {
+      validator: (course) => new Promise(
+        (resolve, reject) => University.findById(course._id)
+          .then((univ) => univ === null ? resolve(false) : resolve(true)))
+
+
+    }
   },
   name: {
     type: String,

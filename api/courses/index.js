@@ -6,7 +6,8 @@ router.get('/:univId/:semester', [
   CourseController.getAllCourseFromUniversityIdAndSemester
 ]);
 
-router.post('/:univId', [
+router.post('/', [
   CourseController.insert
 ]);
+
 module.exports = router;
