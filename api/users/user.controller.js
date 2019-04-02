@@ -100,7 +100,7 @@ exports.insertWish = (req, res) => {
   UserModel.findById(req.params.id)
     .then(user => {
       const student = user._doc;
-      student.studentInfo.wishes = [req.body];
+      student.studentInfo.wishes.push(req.body);
       user.set(student);
       user.save()
         .then((user) => res.status(201).json(formatUser(user)))
