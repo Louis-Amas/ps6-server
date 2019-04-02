@@ -30,9 +30,9 @@ exports.getAllCourseFromUniversityIdAndMajor = (req, res) => {
 
 exports.insert = (req, res) => {
   req.body.univId = req.params.univId;
-  CourseModel.createCourse(req.body)
+  const course  = new CourseModel(req.body);
+  course.save()
       .then(course => {
-        console.log("la");
         res.status(201).json(formatCourse(course));
       })
       .catch(err => {
