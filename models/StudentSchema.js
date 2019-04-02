@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const StudentSchema = new Schema({
+    major: {
+      type: String,
+      enum: ['SI', 'GB', 'ELEC']
+    },
     wishes: [
         {
             univeristyId: {
