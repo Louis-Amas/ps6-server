@@ -49,14 +49,15 @@ UserSchema = new Schema({
   }
 });
 
-
+UserSchema.index({ email: 1}, { unique: true});
 mongoose.model('user', UserSchema);
 
 const User = mongoose.model('user');
 
 User.findByEmail = (mail) => {
   return new Promise((resolve, reject) => {
-    User.find({email: mail}, (err, user) => err !== null ? reject({status: 404, err: err}) : resolve(user[0]))
+    User.find({email: mail}, (err, user) => err !== null ?
+      reject({status: 404, err: err}) : resolve(user[0]))
   });
 };
 
