@@ -13,7 +13,7 @@ module.exports = (cb) => {
   app.use(morgan('[:date[iso]] :method :url :status :response-time ms - :res[content-length]'));
   app.use('/api', api);
   app.use('*', (req, res) => res.status(404).end());
-  mongoose.connect('mongodb://localhost/ps6', { useNewUrlParser: true, useCreateIndex: true});
+  mongoose.connect('mongodb://127.0.0.1/ps6', { useNewUrlParser: true, useCreateIndex: true});
   mongoose.set('debug', true);
   const server = app.listen(process.env.PORT || 9428, () => cb && cb(server));
 };

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const UniversitySchema = require("../models/University");
 const UserSchema = require("../models/User");
-const Course = require('../models/Course');
+const Course = require('../models/CourseSchema');
 
 mongoose.connect("mongodb://localhost/ps6", {useNewUrlParser: true, useCreateIndex: true});
 mongoose.set("debug", true);

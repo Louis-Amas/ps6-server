@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const CourseSchema = require('./CourseSchema');
 
 const UniversitySchema = new Schema({
   name: {
@@ -18,6 +19,10 @@ const UniversitySchema = new Schema({
   url_to_website: {
       type: String,
       required: [true, 'Url is required']
+  },
+  courses: {
+    type: Array,
+    default: []
   }
 });
 
@@ -33,5 +38,18 @@ University.findByCountry = (country, concernedDepartment) => {
             .catch(err => reject(err));
     });
 };
+
+University.findByIdAndCourseSemester = (univId, semester) => new Promise(((resolve, reject) =>
+    University.findById(univId)
+      .then(univ => {
+        if (univ === null)
+          reject({status: 404, message: 'Univeristy not found'});
+        const courses = univ.courses.filter(course => course.semester !== semester);
+        const copyUniv = univ._doc;
+        copyUniv.courses = courses;
+        resolve(copyUniv);
+      })
+      .catch(err => reject(err))
+  ));
 
 module.exports = University;
