@@ -29,7 +29,6 @@ exports.getAllCourseFromUniversityIdAndMajor = (req, res) => {
 };
 
 exports.insert = (req, res) => {
-  req.body.univId = req.params.univId;
   const course  = new CourseModel(req.body);
   course.save()
       .then(course => {
