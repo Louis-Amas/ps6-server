@@ -50,5 +50,15 @@ Course.getByUnivIdAndMajor = (univeristyId, major) => {
   });
 };
 
+Course.createCourse = (courseData) => {
+  return new Promise((resolve, reject) => {
+    const course = new Course(courseData);
+    course.save((err) => {
+      if (err) reject(err);
+      else resolve(course);
+    });
+  });
+};
+
 
 module.exports = Course;

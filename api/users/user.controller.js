@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const UserModel = require("../../models/User");
+const StudentModel = require("../../models/StudentSchema");
 
 const formatUser = (user) => {
   const usr = user._doc;
@@ -93,6 +94,23 @@ exports.update = (req, res) => {
       res.status(404).json(err);
     });
 };
+
+exports.insertWish = (req, res) => {
+  UserModel.findById(req.params.id)
+      .then(user => {
+        StudentModel.createWish(user.studentInfo, req.body)
+          .then( x => {
+            return res.status(200).json(formatUser(user));
+        })
+          .catch(err => {
+            res.status(404).json(err);
+          });
+      })
+      .catch(err => {
+        res.status(404).json(err);
+      });
+};
+
 
 exports.isAuthUserOwner = (req, res, next) => {
   if (req.body.connectedUser._id.toString() === req.params.id)

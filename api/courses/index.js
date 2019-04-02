@@ -5,4 +5,8 @@ const router = new Router();
 router.get('/:univId/:major', [
   CourseController.getAllCourseFromUniversityIdAndMajor
 ]);
+
+router.post('/:univId', [
+  CourseController.insert
+]);
 module.exports = router;
