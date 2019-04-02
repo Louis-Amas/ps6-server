@@ -1,15 +1,15 @@
-const UserModel = require("../../models/User");
-const StudentModel = require("../../models/StudentSchema");
+const UserModel = require("../../../models/User");
+
 
 const formatStudent = (student) => {
-    const usr = student._doc;
+    const usr = student.toObject();
     delete usr.__v;
     delete usr.password;
     return usr;
 };
 
 const removeAndUpdateWish = (user, univId) => {
-    const student = user._doc;
+    const student = user.toObject();
     const pos = student.studentInfo.wishes.find(w => w.universityId.equals(univId)).position;
     student.studentInfo.wishes
         .forEach( w => {
@@ -21,8 +21,9 @@ const removeAndUpdateWish = (user, univId) => {
 };
 
 exports.get = (req, res) => {
-    UserModel.find().then(users => {
-        users = users.filter(user => user.role === "student");
+    UserModel.find({role: 'student'}, (err, users) => {
+        if (users === null)
+          return res.status(200).json([]);
         users = users.map(students => formatStudent(students));
         return res.status(200).json(users);
     })
@@ -30,9 +31,10 @@ exports.get = (req, res) => {
 
 
 exports.insertWish = (req, res) => {
-    UserModel.findById(req.params.id)
-        .then(user => {
-            const student = user._doc;
+    UserModel.findById(req.params.id, (err, user) => {
+            if (err || user === null)
+              return res.status(404).send();
+            const student = user.toObject();
             req.body.position = student.studentInfo.wishes.length + 1;
             student.studentInfo.wishes.push(req.body);
             user.set(student);
@@ -40,9 +42,6 @@ exports.insertWish = (req, res) => {
                 .then((user) => res.status(201).json(formatStudent(user)))
                 .catch(err => res.status(400).json(err));
         })
-        .catch(err => {
-            res.status(404).json(err);
-        });
 };
 
 exports.removeWish = (req, res) => {

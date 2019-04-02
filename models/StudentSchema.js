@@ -35,25 +35,8 @@ const StudentSchema = new Schema({
                 ],
         default: []
     }
-});
-/*
-mongoose.model('student', StudentSchema);
+}, { _id: false});
 
-const Student = mongoose.model('student');
-
-Student.findByUserId = (id) => {
-    return new Promise((resolve, reject) => {
-        Student.find({ userId: new ObjectId(id)})
-            .then((users) => {
-                resolve(users[0]);
-            })
-            .catch(err => {
-                reject(err)
-            });
-    });
-};*/
-
-//StudentSchema.index({"wishes.universityId": 1}, {unique: true});
 
 StudentSchema.createWish = (student, wishData) => {
     return new Promise((resolve, reject) => {

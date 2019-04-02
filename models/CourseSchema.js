@@ -30,10 +30,4 @@ const CourseSchema = new Schema({
     type: String
   }
 });
-
-
-
-
-
-
 module.exports = CourseSchema;

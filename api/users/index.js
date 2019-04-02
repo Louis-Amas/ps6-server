@@ -1,7 +1,11 @@
 const {Router} = require('express');
 const UserController = require('./user.controller');
+const StudentRouter = require('./students');
+
 
 const router = new Router();
+
+router.use('/student', StudentRouter);
 
 router.get('/', [
   UserController.get
@@ -29,9 +33,6 @@ router.delete('/:id', [
   UserController.delete
 ]);
 
-router.post('/:id/wishes', [
-  UserController.insertWish
-]);
 
 
 module.exports = router;

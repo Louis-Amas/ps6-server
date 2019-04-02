@@ -3,7 +3,7 @@ const UserModel = require("../../models/User");
 const StudentModel = require("../../models/StudentSchema");
 
 const formatUser = (user) => {
-  const usr = user._doc;
+  const usr = user.toObject();
   delete usr.__v;
   delete usr.password;
   return usr;
@@ -85,18 +85,6 @@ exports.update = (req, res) => {
       });
     });
 };
-
-exports.insertWish = (req, res) => {
-  UserModel.findById(req.params.id, (err, user) => {
-      const student = user._doc;
-      student.studentInfo.wishes.push(req.body);
-      user.set(student);
-      user.save()
-        .then((user) => res.status(201).json(formatUser(user)))
-        .catch(err => res.status(400).json(err));
-    });
-};
-
 
 exports.isAuthUserOwner = (req, res, next) => {
   if (req.body.connectedUser._id.toString() === req.params.id)
