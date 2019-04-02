@@ -28,10 +28,10 @@ router.delete('/:id', [
   UserController.isAuthUserOwner,
   UserController.delete
 ]);
-/*
+
 router.post('/:id/wishes', [
   UserController.insertWish
-]);*/
+]);
 
 
 module.exports = router;

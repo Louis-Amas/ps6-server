@@ -49,16 +49,6 @@ mongoose.model('user', UserSchema);
 
 const User = mongoose.model('user');
 
-/*
-User.createUser = (userData) => {
-  return new Promise((resolve, reject) => {
-    const user = new User(userData);
-    user.save((err) => {
-      if (err) reject(err);
-      else resolve(user);
-    });
-  });
-};*/
 
 User.findByEmail = (mail) => {
   return new Promise((resolve, reject) => {

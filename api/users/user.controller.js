@@ -98,18 +98,17 @@ exports.update = (req, res) => {
 
 exports.insertWish = (req, res) => {
   UserModel.findById(req.params.id)
-      .then(user => {
-        StudentModel.createWish(user.studentInfo, req.body)
-          .then( x => {
-            return res.status(200).json(formatUser(user));
-        })
-          .catch(err => {
-            res.status(404).json(err);
-          });
-      })
-      .catch(err => {
-        res.status(404).json(err);
-      });
+    .then(user => {
+      const student = user._doc;
+      student.studentInfo.wishes = [req.body];
+      user.set(student);
+      user.save()
+        .then((user) => res.status(201).json(formatUser(user)))
+        .catch(err => res.status(400).json(err));
+    })
+    .catch(err => {
+      res.status(404).json(err);
+    });
 };
 
 
