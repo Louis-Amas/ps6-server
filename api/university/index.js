@@ -22,6 +22,10 @@ router.get('/:univId/courses/semester/:semester', [
   UniversityController.getUnivByIdAndCourseSemester
 ]);
 
+router.delete('/:univId/courses/:courseId', [
+  UniversityController.deleteCourseByUnivIdAndCourseId
+]);
+
 router.post('/:univId/courses', [
   UniversityController.insertCourseByUnivId
 ]);

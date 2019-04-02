@@ -21,7 +21,7 @@ const UniversitySchema = new Schema({
       required: [true, 'Url is required']
   },
   courses: {
-    type: Array,
+    type: [CourseSchema],
     default: []
   }
 });
