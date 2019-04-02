@@ -11,5 +11,7 @@ router.post('/:id/wishes', [
     StudentController.insertWish
 ]);
 
-
+router.delete('/:id/wishes/:univId', [
+    StudentController.removeWish
+]);
 module.exports = router;

@@ -9,16 +9,16 @@ const StudentSchema = new Schema({
     wishes: {
         type: [
                 {
-                    univeristyId: {
+                    universityId: {
                         type: Schema.Types.ObjectId,
                         ref: 'university',
                         unique: true,
                         required: [true, 'UniversityId is required']
                     },
                     courses: [{ type: Schema.Types.ObjectId, ref: 'course' }],
-                    position: Number
+                    position: Number,
                 }],
-        default: []
+        default: [],
     },
     suppDocs: {
         type: [
@@ -52,6 +52,8 @@ Student.findByUserId = (id) => {
             });
     });
 };*/
+
+//StudentSchema.index({"wishes.universityId": 1}, {unique: true});
 
 StudentSchema.createWish = (student, wishData) => {
     return new Promise((resolve, reject) => {
