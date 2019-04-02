@@ -25,16 +25,6 @@ mongoose.model('university', UniversitySchema);
 
 const University = mongoose.model('university');
 
-University.createUniversity = (universityData) => {
-    return new Promise((resolve, reject) => {
-        const university = new University(universityData);
-        console.log(university);
-        university.save((err) => {
-            if (err) reject(err);
-            else resolve(university);
-        });
-    });
-};
 
 University.findByCountry = (country, concernedDepartment) => {
     return new Promise((resolve, reject) => {

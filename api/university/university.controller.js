@@ -7,8 +7,8 @@ exports.get = (req, res) => {
 };
 
 exports.insert = (req, res) => {
-    console.log(req.body);
-    UniversityModel.createUniversity(req.body)
+    const univ = new UniversityModel(req.body);
+    univ.save()
         .then(university => {
             return res.status(201).json(university);
         })
