@@ -43,11 +43,13 @@ UserSchema = new Schema({
   studentInfo: StudentSchema
 });
 
+UserSchema.index({ email: 1}, { unique: true});
+
 mongoose.model('user', UserSchema);
 
 const User = mongoose.model('user');
 
-
+/*
 User.createUser = (userData) => {
   return new Promise((resolve, reject) => {
     const user = new User(userData);
@@ -56,7 +58,7 @@ User.createUser = (userData) => {
       else resolve(user);
     });
   });
-};
+};*/
 
 User.findByEmail = (mail) => {
   return new Promise((resolve, reject) => {

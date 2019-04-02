@@ -50,7 +50,8 @@ exports.insert = (req, res) => {
     .update(req.body.password)
     .digest("base64");
   req.body.password = salt + "$" + hash;
-  UserModel.createUser(req.body)
+  const user = new UserModel(req.body);
+  user.save()
     .then(user => {
       res.status(201).json(formatUser(user));
     })
