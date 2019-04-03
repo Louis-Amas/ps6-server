@@ -7,6 +7,10 @@ router.get('/', [
     StudentController.get
 ]);
 
+router.get('/:id/wishes', [
+    StudentController.getWishes
+]);
+
 router.post('/:id/wishes', [
     StudentController.insertWish
 ]);

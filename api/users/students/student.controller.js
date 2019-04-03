@@ -1,5 +1,5 @@
 const UserModel = require("../../../models/User");
-
+const UniversityModel = require("../../../models/University");
 
 const formatStudent = (student) => {
     const usr = student.toObject();
@@ -20,6 +20,22 @@ const removeAndUpdateWish = (user, univId) => {
     return student;
 };
 
+const attachUniversity = (wishList) => {
+    const wishes = wishList.toObject();
+    const promise = wishes.map(w => {
+        return UniversityModel.findById(w.universityId, (err, university) =>{
+            w.university = university.toObject();
+            delete w.university.courses;
+            return w;
+        });
+    });
+    return new Promise ((resolve, reject) => {
+        Promise.all(promise).then(() => {
+            return resolve(wishes);
+        }).catch((err) => { return reject(err);});
+    })
+};
+
 exports.get = (req, res) => {
     UserModel.find().populate({
 
@@ -37,6 +53,7 @@ exports.insertWish = (req, res) => {
             if (err || user === null)
               return res.status(404).send();
             const student = user.toObject();
+            console.log(student);
             req.body.position = student.studentInfo.wishes.length + 1;
             student.studentInfo.wishes.push(req.body);
             user.set(student);
@@ -47,14 +64,25 @@ exports.insertWish = (req, res) => {
 };
 
 exports.removeWish = (req, res) => {
-    UserModel.findById(req.params.id)
-        .then(user => {
-            user.set(removeAndUpdateWish(user, req.params.univId));
-            user.save()
-                .then((user) => res.status(201).json(formatStudent(user)))
-                .catch(err => res.status(400).json(err));
+    UserModel.findById(req.params.id, (err, user) => {
+        if(err || user == null)
+            return res.status(404).send();
+        user.set(removeAndUpdateWish(user, req.params.univId));
+        user.save()
+            .then((user) => res.status(201).json(formatStudent(user)))
+            .catch(err => res.status(400).json(err));
+    })
+};
+
+exports.getWishes = (req, res) => {
+    UserModel.findById(req.params.id, (err, user) => {
+        if(err || user == null)
+            return res.status(404).send();
+        attachUniversity(user.studentInfo.wishes).then( w => {
+            return res.status(202).json(w);
         })
-        .catch(err => {
-            res.status(404).json(err);
-        });
+            .catch(() => {
+                return res.status(404).send()
+            });
+    })
 };
