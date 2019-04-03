@@ -29,7 +29,7 @@ exports.getByCountryAndMajor = (req, res) =>
         .then(university =>  university !== null ? res.status(200).json(university) : res.status(404).send());
 
 exports.getUnivByIdAndCourseSemester = (req, res) =>
-  UniversityModel.findByIdAndCourseSemester(req.params.univId, req.params.semester)
+  UniversityModel.findByIdAndCourseSemester(req.params.univId, parseInt(req.params.semester))
     .then(university =>  university !== null ? res.status(200).json(university) : res.status(404).send());
 
 exports.insertCourseByUnivId = (req, res) =>

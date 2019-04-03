@@ -21,7 +21,9 @@ const removeAndUpdateWish = (user, univId) => {
 };
 
 exports.get = (req, res) => {
-    UserModel.find({role: 'student'}, (err, users) => {
+    UserModel.find().populate({
+
+    }).exec({role: 'student'}, (err, users) => {
         if (users === null)
           return res.status(200).json([]);
         users = users.map(students => formatStudent(students));

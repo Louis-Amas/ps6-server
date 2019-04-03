@@ -40,16 +40,13 @@ University.findByCountry = (country, concernedDepartment) => {
 };
 
 University.findByIdAndCourseSemester = (univId, semester) => new Promise(((resolve, reject) =>
-    University.findById(univId)
-      .then(univ => {
-        if (univ === null)
-          reject({status: 404, message: 'Univeristy not found'});
-        const courses = univ.courses.filter(course => course.semester !== semester);
-        const copyUniv = univ._doc;
-        copyUniv.courses = courses;
-        resolve(copyUniv);
+    University.findById(univId, (err, univ) => {
+        if (univ === undefined)
+          return reject({status: 404, message: 'Univeristy not found'});
+        const univOb = univ.toObject();
+        const courses = univOb.courses.filter(course => course.semester === semester);
+        resolve(courses);
       })
-      .catch(err => reject(err))
   ));
 
 module.exports = University;
