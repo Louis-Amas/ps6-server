@@ -43,13 +43,14 @@ UserSchema = new Schema({
     enum: ["bri", "teacher", "student"],
     required: [true, 'role is required']
   },
-  studentInfo:{
+  studentInfo: {
     type: StudentSchema,
-    default: StudentSchema
+    default: {}
   }
 });
 
-UserSchema.index({ email: 1}, { unique: true});
+
+UserSchema.index({email: 1}, {unique: true});
 mongoose.model('user', UserSchema);
 
 const User = mongoose.model('user');
