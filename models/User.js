@@ -57,7 +57,7 @@ const User = mongoose.model('user');
 
 
 User.findByIdWithPostAndCourses = (id) => new Promise((resolve, reject) =>
-  User.findById(id).populate('studentInfo.wishes.univeristy').exec((err, user) => {
+  User.findById(id).populate('studentInfo.wishes.university').exec((err, user) => {
     if (err)
       return reject({status: 400, msg: 'Bad request'});
     else if (user === null)

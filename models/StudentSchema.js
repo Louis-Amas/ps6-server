@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const University = require('./University');
+const Course = require('./CourseSchema');
 
 const StudentSchema = new Schema({
   major: {
@@ -27,7 +28,10 @@ const StudentSchema = new Schema({
           }
         }
         ,
-        courses: [{type: Schema.Types.ObjectId, ref: 'course'}],
+        courses: [{
+          type: Schema.Types.ObjectId,
+          ref: 'course',
+        }],
         position: Number,
       }],
     default: [],
@@ -55,10 +59,10 @@ StudentSchema.pre('save', function (next) {
   const student = this.toObject();
 
   const res = student.wishes.reduce((prev, curr) => {
-    if (prev[curr.univeristy] === undefined)
-      prev[curr.univeristy] = 1;
+    if (prev[curr.university] === undefined)
+      prev[curr.university] = 1;
     else
-      prev[curr.univeristy] += 1;
+      prev[curr.university] += 1;
 
     return prev;
   }, {});

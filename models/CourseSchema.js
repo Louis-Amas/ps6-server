@@ -30,4 +30,6 @@ const CourseSchema = new Schema({
     type: String
   }
 });
+
+mongoose.model('course', CourseSchema);
 module.exports = CourseSchema;

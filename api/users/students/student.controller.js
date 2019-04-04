@@ -10,7 +10,7 @@ const formatStudent = (student) => {
 
 const removeAndUpdateWish = (user, univId) => {
     const student = user.toObject();
-    const pos = student.studentInfo.wishes.find(w => w.universityId.equals(univId)).position;
+    const pos = student.studentInfo.wishes.find(w => w.university._id.equals(univId)).position;
     student.studentInfo.wishes
         .forEach( w => {
             if(w.position >= pos)
@@ -35,7 +35,6 @@ exports.insertWish = (req, res) => {
     UserModel.findByIdWithPostAndCourses(req.params.id)
       .then(user => {
         const student = user.toObject();
-
         req.body.position = student.studentInfo.wishes.length + 1;
         student.studentInfo.wishes.push(req.body);
         user.set(student);
@@ -54,11 +53,12 @@ exports.removeWish = (req, res) => {
           .then((user) => res.status(201).json(formatStudent(user)))
           .catch(err => res.status(400).json(err));
       })
-      .catch(err => res.status(err.status).json(err.msg))
+      .catch(err => res.status(400).json(err.msg))
 };
 
 exports.getWishes = (req, res) => {
-    UserModel.findById(req.params.id).populate('studentInfo.wishes.university').exec((err, user) => {
+    UserModel.findById(req.params.id).populate('studentInfo.wishes.university')
+        .exec((err, user) => {
         if(err || user == null)
             return res.status(404).send();
         return res.status(201).json(user.studentInfo.wishes);
