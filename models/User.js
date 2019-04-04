@@ -55,6 +55,17 @@ mongoose.model('user', UserSchema);
 
 const User = mongoose.model('user');
 
+
+User.findByIdWithPostAndCourses = (id) => new Promise((resolve, reject) =>
+  User.findById(id).populate('studentInfo.wishes.univeristy').exec((err, user) => {
+    if (err)
+      return reject({status: 400, msg: 'Bad request'});
+    else if (user === null)
+      return reject({status: 404, msg: 'User not found'});
+    resolve(user);
+  })
+);
+
 User.findByEmail = (mail) => {
   return new Promise((resolve, reject) => {
     User.find({email: mail}, (err, user) => err !== null ?

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const University = require('./University');
 
 const StudentSchema = new Schema({
   major: {
@@ -9,12 +10,23 @@ const StudentSchema = new Schema({
   wishes: {
     type: [
       {
-        universityId: {
+        university: {
           type: Schema.Types.ObjectId,
           ref: 'university',
           unique: true,
-          required: [true, 'UniversityId is required']
-        },
+          required: [true, 'University is required'],
+          validate: {
+            validator: (univId) => new Promise((resolve, reject) => {
+              University.findById(univId, (err, univ) => {
+                if (univ === null)
+                  reject("University does not exists");
+                else
+                  resolve();
+              })
+            })
+          }
+        }
+        ,
         courses: [{type: Schema.Types.ObjectId, ref: 'course'}],
         position: Number,
       }],
@@ -37,16 +49,16 @@ const StudentSchema = new Schema({
   }
 });
 
-StudentSchema.pre('save', function(next) {
+StudentSchema.pre('save', function (next) {
   if (this.wishes === undefined)
     return next();
   const student = this.toObject();
 
   const res = student.wishes.reduce((prev, curr) => {
-    if (prev[curr.universityId] === undefined)
-      prev[curr.universityId] = 1;
+    if (prev[curr.univeristy] === undefined)
+      prev[curr.univeristy] = 1;
     else
-      prev[curr.universityId] += 1;
+      prev[curr.univeristy] += 1;
 
     return prev;
   }, {});

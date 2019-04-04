@@ -20,26 +20,9 @@ const removeAndUpdateWish = (user, univId) => {
     return student;
 };
 
-const attachUniversity = (wishList) => {
-    const wishes = wishList.toObject();
-    const promise = wishes.map(w => {
-        return UniversityModel.findById(w.universityId, (err, university) =>{
-            w.university = university.toObject();
-            delete w.university.courses;
-            return w;
-        });
-    });
-    return new Promise ((resolve, reject) => {
-        Promise.all(promise).then(() => {
-            return resolve(wishes);
-        }).catch((err) => { return reject(err);});
-    })
-};
 
 exports.get = (req, res) => {
-    UserModel.find().populate({
-
-    }).exec({role: 'student'}, (err, users) => {
+    UserModel.find({}, (err, users) => {
         if (users === null)
           return res.status(200).json([]);
         users = users.map(students => formatStudent(students));
@@ -49,40 +32,34 @@ exports.get = (req, res) => {
 
 
 exports.insertWish = (req, res) => {
-    UserModel.findById(req.params.id, (err, user) => {
-            if (err || user === null)
-              return res.status(404).send();
-            const student = user.toObject();
-            console.log(student);
-            req.body.position = student.studentInfo.wishes.length + 1;
-            student.studentInfo.wishes.push(req.body);
-            user.set(student);
-            user.save()
-                .then((user) => res.status(201).json(formatStudent(user)))
-                .catch(err => res.status(400).json(err));
-        })
+    UserModel.findByIdWithPostAndCourses(req.params.id)
+      .then(user => {
+        const student = user.toObject();
+
+        req.body.position = student.studentInfo.wishes.length + 1;
+        student.studentInfo.wishes.push(req.body);
+        user.set(student);
+        user.save()
+          .then((user) => res.status(201).json(formatStudent(user)))
+          .catch(err => res.status(400).json(err));
+      })
+    .catch(err => res.status(err.status).json(err.msg));
 };
 
 exports.removeWish = (req, res) => {
-    UserModel.findById(req.params.id, (err, user) => {
-        if(err || user == null)
-            return res.status(404).send();
+    UserModel.findByIdWithPostAndCourses(req.params.id)
+      .then(user => {
         user.set(removeAndUpdateWish(user, req.params.univId));
         user.save()
-            .then((user) => res.status(201).json(formatStudent(user)))
-            .catch(err => res.status(400).json(err));
-    })
+          .then((user) => res.status(201).json(formatStudent(user)))
+          .catch(err => res.status(400).json(err));
+      })
+      .catch(err => res.status(err.status).json(err.msg))
 };
 
 exports.getWishes = (req, res) => {
-    UserModel.findById(req.params.id, (err, user) => {
+    UserModel.findById(req.params.id).populate('studentInfo.wishes.univeristy').exec((err, user) => {
         if(err || user == null)
             return res.status(404).send();
-        attachUniversity(user.studentInfo.wishes).then( w => {
-            return res.status(202).json(w);
-        })
-            .catch(() => {
-                return res.status(404).send()
-            });
     })
 };

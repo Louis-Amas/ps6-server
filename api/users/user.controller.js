@@ -14,24 +14,25 @@ exports.returnConnectedUser = (req, res) => {
 };
 
 exports.get = (req, res) => {
-  UserModel.find({}, (err, users) => {
+  UserModel.find({}).populate('studentInfo.wishes.university').exec((err, users) => {
     users = users.map(user => formatUser(user));
     return res.status(200).json(users);
   })
 };
 
 exports.delete = (req, res) => {
-  UserModel.findById(req.params.id, (err, user) => {
-      if (user === null)
-        return res.status(404).send();
+  UserModel.findByIdWithPostAndCourses(req.params.id)
+    .then(user => {
       user.remove();
       return res.status(200).json(formatUser(user));
     })
+    .catch(err => res.status(err.status).json(err.msg));;
 };
 
 exports.getById = (req, res) => {
-  UserModel.findById(req.params.id,
-    (err, user) => user !== null ? res.status(200).json(formatUser(user)) : res.status(404).send());
+  UserModel.findByIdWithPostAndCourses(req.params.id)
+    .then(user => res.status(200).json(formatUser(user)))
+    .catch(err => res.status(err.status).json(err.msg));
 };
 
 exports.insert = (req, res) => {
@@ -60,9 +61,8 @@ exports.insert = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  UserModel.findById(req.params.id)
+  UserModel.findByIdWithPostAndCourses(req.params.id)
     .then(user => {
-
       if (req.body['newPassword']) {
         const salt = crypto.randomBytes(16).toString("base64");
         const hash = crypto
@@ -84,7 +84,8 @@ exports.update = (req, res) => {
           res.status(200).json(formatUser(updatedUser));
         }
       });
-    });
+    })
+    .catch(err => res.status(err.status).send(err.msg));
 };
 
 exports.isAuthUserOwner = (req, res, next) => {
