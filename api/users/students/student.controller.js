@@ -58,8 +58,9 @@ exports.removeWish = (req, res) => {
 };
 
 exports.getWishes = (req, res) => {
-    UserModel.findById(req.params.id).populate('studentInfo.wishes.univeristy').exec((err, user) => {
+    UserModel.findById(req.params.id).populate('studentInfo.wishes.university').exec((err, user) => {
         if(err || user == null)
             return res.status(404).send();
+        return res.status(201).json(user.studentInfo.wishes);
     })
 };
