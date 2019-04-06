@@ -32,27 +32,25 @@ exports.get = (req, res) => {
 
 
 exports.insertWish = (req, res) => {
-    UserModel.findById(req.params.id)
-      .then(user => {
+    UserModel.findById(req.params.id, (err, user) => {
         const student = user.toObject();
         req.body.position = student.studentInfo.wishes.length + 1;
         student.studentInfo.wishes.push(req.body);
         user.set(student);
         user.save()
-          .then((user) => res.status(201).json(formatStudent(user)))
-          .catch(err => res.status(400).json(err));
-      })
+            .then((user) => res.status(201).json(formatStudent(user)))
+            .catch(err => res.status(400).json(err));
+    })
     .catch(err => res.status(err.status).json(err.msg));
 };
 
 exports.removeWish = (req, res) => {
-    UserModel.findById(req.params.id)
-      .then(user => {
+    UserModel.findById(req.params.id, (err, user) => {
         user.set(removeAndUpdateWish(user, req.params.univId));
         user.save()
-          .then((user) => res.status(201).json(formatStudent(user)))
-          .catch(err => res.status(400).json(err));
-      })
+            .then((user) => res.status(201).json(formatStudent(user)))
+            .catch(err => res.status(400).json(err));
+    })
       .catch(err => res.status(400).json(err.msg))
 };
 
