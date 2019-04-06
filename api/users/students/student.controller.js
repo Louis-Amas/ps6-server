@@ -45,12 +45,13 @@ exports.insertWish = (req, res) => {
 };
 
 exports.removeWish = (req, res) => {
-    UserModel.findById(req.params.id, (err, user) => {
+    UserModel.findByIdWithPostAndCourses(req.params.id)
+        .then(user => {
         user.set(removeAndUpdateWish(user, req.params.univId));
         user.save()
-            .then((user) => res.status(201).json(formatStudent(user)))
+            .then((user) => res.status(201).json(user.studentInfo.wishes))
             .catch(err => res.status(400).json(err));
-    })
+        })
       .catch(err => res.status(400).json(err.msg))
 };
 
