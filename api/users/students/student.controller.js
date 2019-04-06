@@ -20,9 +20,21 @@ const removeAndUpdateWish = (user, univId) => {
     return student;
 };
 
+const updateWishPosition = (user, univId, newPosition) =>{
+    const student = user.toObject();
+    const curWish = student.studentInfo.wishes.find(w => w.university._id.equals(univId));
+    const oldPos = curWish.position;
+    //swap wish
+    student.studentInfo.wishes[oldPos - 1] = student.studentInfo.wishes[newPosition -1];
+    student.studentInfo.wishes[newPosition -1] = curWish;
+    //update their position
+    student.studentInfo.wishes[oldPos - 1].position = oldPos;
+    student.studentInfo.wishes[newPosition - 1].position = newPosition;
+    return student;
+};
 
 exports.get = (req, res) => {
-    UserModel.find({}, (err, users) => {
+    UserModel.find({role: "student"}, (err, users) => {
         if (users === null)
           return res.status(200).json([]);
         users = users.map(students => formatStudent(students));
@@ -62,4 +74,21 @@ exports.getWishes = (req, res) => {
             return res.status(404).send();
         return res.status(201).json(user.studentInfo.wishes);
     })
+};
+
+exports.updateWish = (req, res) => {
+    UserModel.findByIdWithPostAndCourses(req.params.id)
+        .then((user) => {
+        if(req.body.position === undefined)
+            return res.status(400).send({
+                "errors": {
+                    "msg": "A position is needed"
+                }
+            });
+        user.set(updateWishPosition(user, req.params.univId, req.body.position));
+        user.save()
+            .then((user) => res.status(201).json(user.studentInfo.wishes))
+            .catch(err => res.status(400).json(err));
+    })
+        .catch(err => res.status(400).json(err.msg))
 };

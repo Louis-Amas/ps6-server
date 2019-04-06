@@ -45,7 +45,11 @@ UserSchema = new Schema({
   },
   studentInfo: {
     type: StudentSchema,
-    default: {}
+    default: function() {
+      if (this.role === "student") {
+        return {}
+      }
+    }
   }
 });
 

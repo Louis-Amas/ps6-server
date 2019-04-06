@@ -31,6 +31,8 @@ const StudentSchema = new Schema({
           type: Schema.Types.ObjectId,
         }],
         position: Number,
+        ECTS_count: Number,
+        semester: Number
       }],
     default: [],
   },
@@ -57,11 +59,18 @@ StudentSchema.pre('save', function (next) {
   const student = this.toObject();
 
   const res = student.wishes.reduce((prev, curr) => {
-    if (prev[curr.university] === undefined)
-      prev[curr.university] = 1;
-    else
-      prev[curr.university] += 1;
-
+    if(curr.university._id === undefined) {
+      if (prev[curr.university] === undefined)
+        prev[curr.university] = 1;
+      else
+        prev[curr.university] += 1;
+    }
+    else{
+      if (prev[curr.university._id] === undefined)
+        prev[curr.university._id] = 1;
+      else
+        prev[curr.university._id] += 1;
+    }
     return prev;
   }, {});
   let cond = true;
@@ -72,8 +81,9 @@ StudentSchema.pre('save', function (next) {
     }
   }
 
-  if (!cond)
-    throw new Error("wi");
+  if (!cond){
+    throw new Error("university id already taken");
+  }
   else
     next();
 });
