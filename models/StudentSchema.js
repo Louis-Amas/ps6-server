@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const University = require('./University');
-const Course = require('./CourseSchema');
 
 const StudentSchema = new Schema({
   major: {
@@ -30,7 +29,6 @@ const StudentSchema = new Schema({
         ,
         courses: [{
           type: Schema.Types.ObjectId,
-          ref: 'course',
         }],
         position: Number,
       }],

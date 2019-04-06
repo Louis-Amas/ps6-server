@@ -31,5 +31,4 @@ const CourseSchema = new Schema({
   }
 });
 
-mongoose.model('course', CourseSchema);
 module.exports = CourseSchema;

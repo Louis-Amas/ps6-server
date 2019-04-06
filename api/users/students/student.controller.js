@@ -32,7 +32,7 @@ exports.get = (req, res) => {
 
 
 exports.insertWish = (req, res) => {
-    UserModel.findByIdWithPostAndCourses(req.params.id)
+    UserModel.findById(req.params.id)
       .then(user => {
         const student = user.toObject();
         req.body.position = student.studentInfo.wishes.length + 1;
@@ -46,7 +46,7 @@ exports.insertWish = (req, res) => {
 };
 
 exports.removeWish = (req, res) => {
-    UserModel.findByIdWithPostAndCourses(req.params.id)
+    UserModel.findById(req.params.id)
       .then(user => {
         user.set(removeAndUpdateWish(user, req.params.univId));
         user.save()
