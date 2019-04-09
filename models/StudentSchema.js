@@ -11,6 +11,10 @@ const StudentSchema = new Schema({
     type: String,
     enum: ['3', '4', '5']
   },
+  lastYearMajor: {
+    type: String,
+    enum: ['UNKNOWN']
+  },
   wishes: {
     type: [
       {

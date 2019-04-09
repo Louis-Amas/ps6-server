@@ -1,4 +1,5 @@
 const UniversityModel = require("../../models/University");
+const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.get = (req, res) =>
     UniversityModel.find().then(university => res.status(200).json(university));
@@ -31,6 +32,30 @@ exports.getByCountryAndMajor = (req, res) =>
 exports.getUnivByIdAndCourseSemester = (req, res) =>
   UniversityModel.findByIdAndCourseSemester(req.params.univId, parseInt(req.params.semester))
     .then(university =>  university !== null ? res.status(200).json(university) : res.status(404).send());
+
+exports.getCoursesByUnivIdSemesterAndLastYear = (req, res) => {
+  UniversityModel.findOne({
+    _id: new ObjectId(req.params.univId),
+  }, (err, univ) => {
+    if (err || univ === null)
+      return res.status(404).send();
+
+    const courses = univ.toObject().courses;
+
+    if (req.query.semester)
+      req.query.semester = parseInt(req.query.semester);
+
+
+    const good = courses.filter( (elem) => {
+      for (let key in req.query)
+        if (elem[key] !== req.query[key])
+          return false;
+      return true;
+    });
+    return res.status(200).json(good);
+  });
+
+};
 
 exports.insertCourseByUnivId = (req, res) =>
   UniversityModel.findById(req.params.univId)

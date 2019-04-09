@@ -18,6 +18,11 @@ router.get('/country/:country/:concernedDepartment', [
     UniversityController.getByCountryAndMajor
 ]);
 
+
+router.get('/:univId/courses', [
+  UniversityController.getCoursesByUnivIdSemesterAndLastYear
+]);
+
 router.get('/:univId/courses/semester/:semester', [
   UniversityController.getUnivByIdAndCourseSemester
 ]);
