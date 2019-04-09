@@ -1,5 +1,18 @@
 const UserModel = require("../../../models/User");
-const UniversityModel = require("../../../models/University");
+
+exports.stateVerify = (req, res, next) => {
+    UserModel.findById(req.params.id, (err, user) => {
+        if(user.studentInfo.stateValidation === "waitStudent"){
+            req.body.user = user;
+            return next();
+        }
+        return res.status(403).send({
+            "errors": {
+                "msg": "student is not at the state : waitStudent"
+            }
+        });
+    });
+};
 
 const formatStudent = (student) => {
   const usr = student.toObject();
@@ -105,4 +118,18 @@ exports.updateWish = (req, res) => {
         .catch(err => res.status(400).json(err));
     })
     .catch(err => res.status(400).json(err.msg))
+};
+
+exports.updateStudent = (req, res) => {
+    UserModel.findById(req.params.id, (err, user) => {
+        console.log('la');
+        if (req.body.stateValidation === undefined)
+            return res.status(400).json(err);
+        const student = user.toObject();
+        student.studentInfo.stateValidation = req.body.stateValidation;
+        user.set(student);
+        user.save()
+            .then((user) => res.status(201).json(user))
+            .catch(err => res.status(400).json(err));
+    });
 };

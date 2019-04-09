@@ -31,11 +31,15 @@ mongoose.model('university', UniversitySchema);
 const University = mongoose.model('university');
 
 
-University.findByCountry = (country, concernedDepartment) => {
+University.findByMajor = (concernedDepartment) => {
     return new Promise((resolve, reject) => {
-        University.find({country: country, concernedDepartment: concernedDepartment})
-            .then(university => resolve(university))
-            .catch(err => reject(err));
+        University.find({concernedDepartment: {$all: [concernedDepartment]}}, (err, univ) => {
+            if(err || univ == null)
+                return reject();
+            else {
+                return resolve(univ);
+            }
+        })
     });
 };
 

@@ -12,19 +12,27 @@ router.get('/:id/wishes/', [
 ]);
 
 router.post('/:id/attachements', [
-  StudentController.insertAttachement
+    StudentController.stateVerify,
+    StudentController.insertAttachement
 ]);
 
 router.post('/:id/wishes', [
+    StudentController.stateVerify,
     StudentController.insertWish
 ]);
 
 router.delete('/:id/wishes/:univId', [
+    StudentController.stateVerify,
     StudentController.removeWish
 ]);
 
 router.put('/:id/wishes/:univId', [
+    StudentController.stateVerify,
     StudentController.updateWish
+]);
+
+router.put('/:id', [
+    StudentController.updateStudent
 ]);
 
 module.exports = router;
