@@ -14,8 +14,8 @@ router.post('/', [
     UniversityController.insert
 ]);
 
-router.get('/country/:country/:concernedDepartment', [
-    UniversityController.getByCountryAndMajor
+router.get('/concernedDepartment/:concernedDepartment', [
+    UniversityController.getByMajor
 ]);
 
 router.get('/:univId/courses/semester/:semester', [
