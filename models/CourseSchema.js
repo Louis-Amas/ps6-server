@@ -20,7 +20,8 @@ const CourseSchema = new Schema({
   },
   major: {
     type: String,
-    required: [true, 'Courses major is required']
+    required: [true, 'Courses major is required'],
+    enum: ['SI', 'GB', 'ELEC', "MAM", "GE"]
   },
   semester: {
     type: Number,
