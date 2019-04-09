@@ -7,8 +7,12 @@ router.get('/', [
     StudentController.get
 ]);
 
-router.get('/:id/wishes', [
+router.get('/:id/wishes/', [
     StudentController.getWishes
+]);
+
+router.post('/:id/attachements', [
+  StudentController.insertAttachement
 ]);
 
 router.post('/:id/wishes', [

@@ -29,6 +29,7 @@ const StudentSchema = new Schema({
         ,
         courses: [{
           type: Schema.Types.ObjectId,
+          ref: 'university.courses._id'
         }],
         position: Number,
         ECTS_count: Number,
@@ -36,12 +37,12 @@ const StudentSchema = new Schema({
       }],
     default: [],
   },
-  suppDocs: {
+  attachments: {
     type: [
       {
         name: {
           type: String,
-          required: [true, 'suppDoc name is required']
+          required: [true, 'Attachement name is required']
         },
         data: {
           type: Buffer,
