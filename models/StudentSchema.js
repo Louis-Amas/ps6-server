@@ -7,6 +7,10 @@ const StudentSchema = new Schema({
     type: String,
     enum: ['SI', 'GB', 'ELEC']
   },
+  year: {
+    type: String,
+    enum: ['3', '4', '5']
+  },
   wishes: {
     type: [
       {
