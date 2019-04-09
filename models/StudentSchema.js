@@ -55,7 +55,12 @@ const StudentSchema = new Schema({
       }
     ],
     default: []
-  }
+  },
+  stateValidation: {
+    type: String,
+    enum: ['waitStudent', 'waitTeacher', 'waitBri', 'validate'],
+    default: 'waitStudent'
+  },
 });
 
 StudentSchema.pre('save', function (next) {
