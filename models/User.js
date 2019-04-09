@@ -37,7 +37,7 @@ UserSchema = new Schema({
     default: new Date()
   },
   phoneNumber: {
-    type: Number
+    type: String
   },
   lastConnection: Date,
   role: {
