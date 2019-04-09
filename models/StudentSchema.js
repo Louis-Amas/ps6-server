@@ -5,7 +5,11 @@ const University = require('./University');
 const StudentSchema = new Schema({
   major: {
     type: String,
-    enum: ['SI', 'GB', 'ELEC']
+    enum: ['SI', 'GB', 'ELEC', "MAM", "GE"]
+  },
+  year: {
+    type: String,
+    enum: ['3', '4', '5']
   },
   wishes: {
     type: [
@@ -29,6 +33,7 @@ const StudentSchema = new Schema({
         ,
         courses: [{
           type: Schema.Types.ObjectId,
+          ref: 'university.courses._id'
         }],
         position: Number,
         ECTS_count: Number,
@@ -36,12 +41,12 @@ const StudentSchema = new Schema({
       }],
     default: [],
   },
-  suppDocs: {
+  attachments: {
     type: [
       {
         name: {
           type: String,
-          required: [true, 'suppDoc name is required']
+          required: [true, 'Attachement name is required']
         },
         data: {
           type: Buffer,

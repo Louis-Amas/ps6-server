@@ -1,6 +1,5 @@
 const crypto = require("crypto");
 const UserModel = require("../../models/User");
-const StudentModel = require("../../models/StudentSchema");
 
 const formatUser = (user) => {
   const usr = user.toObject();
@@ -14,7 +13,9 @@ exports.returnConnectedUser = (req, res) => {
 };
 
 exports.get = (req, res) => {
-  UserModel.find({}).populate('studentInfo.wishes.university').exec((err, users) => {
+  UserModel.find({})
+    .populate('studentInfo.wishes.university')
+    .exec((err, users) => {
     users = users.map(user => formatUser(user));
     return res.status(200).json(users);
   })
