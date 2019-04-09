@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const StudentSchema = require('./StudentSchema');
+const TeacherSchema = require('./TeacherSchema');
+
 UserSchema = new Schema({
   firstName: {
     type: String,
@@ -35,7 +37,7 @@ UserSchema = new Schema({
     default: new Date()
   },
   phoneNumber: {
-    type: Number
+    type: String
   },
   lastConnection: Date,
   role: {
@@ -47,6 +49,14 @@ UserSchema = new Schema({
     type: StudentSchema,
     default: function() {
       if (this.role === "student") {
+        return {}
+      }
+    }
+  },
+  teacherInfo: {
+    type: TeacherSchema,
+    default: function() {
+      if (this.role === "teacher") {
         return {}
       }
     }

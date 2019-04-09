@@ -5,7 +5,11 @@ const University = require('./University');
 const StudentSchema = new Schema({
   major: {
     type: String,
-    enum: ['SI', 'GB', 'ELEC']
+    enum: ['SI', 'GB', 'ELEC', "MAM", "GE"]
+  },
+  year: {
+    type: String,
+    enum: ['3', '4', '5']
   },
   wishes: {
     type: [
