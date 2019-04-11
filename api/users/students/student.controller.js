@@ -129,7 +129,7 @@ exports.updateStudent = (req, res) => {
         student.studentInfo.stateValidation = req.body.stateValidation;
         user.set(student);
         user.save()
-            .then((user) => res.status(201).json(user))
+            .then((user) => res.status(201).json(formatStudent(user)))
             .catch(err => res.status(400).json(err));
     });
 };
