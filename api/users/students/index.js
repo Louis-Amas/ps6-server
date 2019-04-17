@@ -1,5 +1,6 @@
 const {Router} = require('express');
 const StudentController = require('./student.controller');
+const UserController = require('../user.controller');
 
 const router = new Router();
 
@@ -12,6 +13,8 @@ router.get('/:id/wishes/', [
 ]);
 
 router.get('/status/:status', [
+  UserController.isAuth,
+  UserController.verifyPermissionsUser(['bri', 'teacher']),
   StudentController.getStudentsByValidateStatus
 ]);
 
