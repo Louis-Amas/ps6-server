@@ -10,15 +10,15 @@ const formatUser = (user) => {
 const findAndPostStudentByStateAndMajor = (res, major, studentState) => {
     UserModel.find({role: "student",
             'studentInfo.stateValidation': studentState,
-            'studentInfo.major': major},
-        (err, users) => {
+            'studentInfo.major': major})
+        .populate('studentInfo.wishes.university').exec((err, users) => {
             if(err)
                 return res.status(400).json(err);
             if (users === null)
                 return res.status(200).json([]);
             users = users.map(students => formatUser(students));
             return res.status(200).json(users);
-        });
+    });
 };
 
 exports.get = (req, res) => {
