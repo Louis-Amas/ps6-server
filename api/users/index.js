@@ -19,9 +19,11 @@ router.get('/:id', [
   UserController.getById
 ]);
 
+
 router.post('/', [
   UserController.insert
 ]);
+
 
 router.put('/:id', [
   UserController.isAuth,
@@ -34,7 +36,6 @@ router.delete('/:id', [
   UserController.isAuthUserOwner,
   UserController.delete
 ]);
-
 
 
 module.exports = router;

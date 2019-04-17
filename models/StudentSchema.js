@@ -62,7 +62,7 @@ const StudentSchema = new Schema({
   },
   stateValidation: {
     type: String,
-    enum: ['waitStudent', 'waitTeacher', 'waitBri', 'validate'],
+    enum: ['waitStudent', 'waitTeacher', 'waitBriVerif', 'waitValidate', 'validate'],
     default: 'waitStudent'
   },
 });
@@ -73,13 +73,13 @@ StudentSchema.pre('save', function (next) {
   const student = this.toObject();
 
   const res = student.wishes.reduce((prev, curr) => {
-    if(curr.university._id === undefined) {
+    if (curr.university._id === undefined) {
       if (prev[curr.university] === undefined)
         prev[curr.university] = 1;
       else
         prev[curr.university] += 1;
     }
-    else{
+    else {
       if (prev[curr.university._id] === undefined)
         prev[curr.university._id] = 1;
       else
@@ -95,7 +95,7 @@ StudentSchema.pre('save', function (next) {
     }
   }
 
-  if (!cond){
+  if (!cond) {
     throw new Error("university id already taken");
   }
   else

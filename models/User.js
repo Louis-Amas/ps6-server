@@ -47,7 +47,7 @@ UserSchema = new Schema({
   },
   studentInfo: {
     type: StudentSchema,
-    default: function() {
+    default: function () {
       if (this.role === "student") {
         return {}
       }
@@ -55,7 +55,7 @@ UserSchema = new Schema({
   },
   teacherInfo: {
     type: TeacherSchema,
-    default: function() {
+    default: function () {
       if (this.role === "teacher") {
         return {}
       }
@@ -87,5 +87,15 @@ User.findByEmail = (mail) => {
   });
 };
 
+User.findStudentsByStatus = (status) =>
+  new Promise((resolve, reject) => User.find({
+    "studentInfo.stateValidation": status
+  }, (err, users) => {
+    if (err)
+      return reject({status: 400, err: err});
+    if (users === null)
+      return reject({status: 404, err: ''});
+    return resolve(users);
+  }));
 
 module.exports = User;

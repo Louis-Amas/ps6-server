@@ -1,17 +1,21 @@
 const request = require("request");
 
-const User = { firstName: 'Louis',
+const User = {
+  firstName: 'Louis',
   lastName: 'Amas',
   birthDate: '2019-03-21T17:33:07',
   email: 'amaslouis@gmail.com',
   password: '123',
-  role: 'student' };
+  role: 'student'
+};
 
 const urlUser = 'http://127.0.0.1:9428/api/users';
-let options = { method: 'POST',
+let options = {
+  method: 'POST',
   url: urlUser,
-  headers: { 'content-type': 'application/json' },
-  json: true };
+  headers: {'content-type': 'application/json'},
+  json: true
+};
 
 let id;
 options.body = User;
@@ -33,7 +37,7 @@ describe('user', () => {
   });
 
   test('update user', (done) => {
-    options.body = { firstName: 'Bo'};
+    options.body = {firstName: 'Bo'};
     options.method = 'PUT';
     options.url += `/${id}`;
     options.headers.Authorization = `${User.email}:${User.password}`;

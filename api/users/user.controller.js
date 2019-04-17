@@ -13,9 +13,7 @@ exports.returnConnectedUser = (req, res) => {
 };
 
 exports.get = (req, res) => {
-  UserModel.find({})
-    .populate('studentInfo.wishes.university')
-    .exec((err, users) => {
+  UserModel.find({}).populate('studentInfo.wishes.university').exec((err, users) => {
     users = users.map(user => formatUser(user));
     return res.status(200).json(users);
   })
@@ -27,7 +25,7 @@ exports.delete = (req, res) => {
       user.remove();
       return res.status(200).json(formatUser(user));
     })
-    .catch(err => res.status(err.status).json(err.msg));;
+    .catch(err => res.status(err.status).json(err.msg));
 };
 
 exports.getById = (req, res) => {
@@ -114,18 +112,18 @@ exports.isAuth = (req, res, next) => {
 
 
   UserModel.findByEmail(req.body.email).then(user => {
-      const passwordFields = user.password.split("$");
-      const salt = passwordFields[0];
-      const hash = crypto
-        .createHmac("sha512", salt)
-        .update(req.body.password)
-        .digest("base64");
-      if (hash === passwordFields[1]) {
-        req.body.connectedUser = user;
-        return next();
-      } else {
-        return res.status(401).send({errors: ["Invalid email or password"]});
-      }
-    })
+    const passwordFields = user.password.split("$");
+    const salt = passwordFields[0];
+    const hash = crypto
+      .createHmac("sha512", salt)
+      .update(req.body.password)
+      .digest("base64");
+    if (hash === passwordFields[1]) {
+      req.body.connectedUser = user;
+      return next();
+    } else {
+      return res.status(401).send({errors: ["Invalid email or password"]});
+    }
+  })
     .catch(err => res.status(404).send(err));
 };

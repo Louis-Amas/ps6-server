@@ -103,6 +103,13 @@ exports.getWishes = (req, res) => {
     })
 };
 
+exports.getStudentsByValidateStatus = (req, res) =>
+  UserModel.findStudentsByStatus(req.params.status)
+    .then(students => res.status(200).json(students))
+    .catch(err => res.status(err.status).json(err));
+
+
+
 exports.updateWish = (req, res) => {
   UserModel.findByIdWithPostAndCourses(req.params.id)
     .then((user) => {
@@ -122,7 +129,6 @@ exports.updateWish = (req, res) => {
 
 exports.updateStudent = (req, res) => {
     UserModel.findById(req.params.id, (err, user) => {
-        console.log('la');
         if (req.body.stateValidation === undefined)
             return res.status(400).json(err);
         const student = user.toObject();

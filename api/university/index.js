@@ -3,19 +3,19 @@ const UniversityController = require('./university.controller');
 const router = new Router();
 
 router.get('/', [
-    UniversityController.get
+  UniversityController.get
 ]);
 
 router.get('/:univId', [
-    UniversityController.getById
+  UniversityController.getById
 ]);
 
 router.post('/', [
-    UniversityController.insert
+  UniversityController.insert
 ]);
 
 router.get('/concernedDepartment/:concernedDepartment', [
-    UniversityController.getByMajor
+  UniversityController.getByMajor
 ]);
 
 
