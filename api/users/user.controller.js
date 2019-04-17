@@ -12,6 +12,13 @@ exports.returnConnectedUser = (req, res) => {
   res.status(200).send(req.body.connectedUser);
 };
 
+exports.verifyPermissionsUser = (permission) =>
+  (req, res, next) => {
+    if (permission.includes(req.body.connectedUser.role))
+      return next();
+    return res.status(401).json({err: 'Not sufficient permission'});
+  };
+
 exports.get = (req, res) => {
   UserModel.find({}).populate('studentInfo.wishes.university').exec((err, users) => {
     users = users.map(user => formatUser(user));
