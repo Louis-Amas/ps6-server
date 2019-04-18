@@ -95,7 +95,7 @@ exports.update = (req, res) => {
 };
 
 exports.isAuthUserOwner = (req, res, next) => {
-  if (req.body.connectedUser._id.toString() === req.params.id)
+  if (req.body.connectedUser._id.toString() === req.params.id || req.body.connectedUser.role === "teacher")
     return next();
   return res.status(401).json("Unauthorized");
 };
