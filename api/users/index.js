@@ -37,5 +37,10 @@ router.delete('/:id', [
   UserController.delete
 ]);
 
+router.post('/:id/message', [
+  UserController.sendMessage
+]);
+
+
 
 module.exports = router;

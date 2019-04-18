@@ -134,3 +134,27 @@ exports.isAuth = (req, res, next) => {
   })
     .catch(err => res.status(404).send(err));
 };
+
+exports.sendMessage = (req, res) => {
+  UserModel.findById(req.params.id, (err, user1) => {
+    if (err)
+      return res.status(400).json(err);
+    UserModel.findById(req.body.sendedTo, (err,user2) => {
+      if (err)
+        return res.status(400).json(err);
+      const sender = user1.toObject();
+      const receiver = user2.toObject();
+      sender.sendedMessage.push(req.body);
+      receiver.receivedMessage.push({receivedFrom: sender._id, content: req.body.content});
+      user1.set(sender);
+      user2.set(receiver);
+      user1.save()
+          .then(updatedUser => {
+            user2.save()
+                .then(() => {return res.status(201).json(formatUser(updatedUser))})
+                .catch(err => {return res.status(400).json(err)});
+          })
+          .catch(err => {return res.status(400).json(err)});
+    })
+  })
+};

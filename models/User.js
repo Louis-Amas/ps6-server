@@ -45,6 +45,53 @@ UserSchema = new Schema({
     enum: ["bri", "teacher", "student"],
     required: [true, 'role is required']
   },
+  sendedMessage: {
+    type: [
+            {
+              sendedTo:{
+                type: Schema.Types.ObjectId,
+                ref: 'user',
+                unique: true,
+                required: [true, 'User is required'],
+                validate: {
+                  validator: (userId) => new Promise((resolve, reject) => {
+                    User.findById(userId, (err, user) => {
+                      if (user === null)
+                        reject("User does not exists");
+                      else
+                        resolve();
+                    })
+                  })
+                }
+              },
+              content: String
+            }
+    ],
+    default: []
+  },
+  receivedMessage: {
+    type: [
+      {
+        receivedFrom:{
+          type: Schema.Types.ObjectId,
+          ref: 'user',
+          unique: true,
+          required: [true, 'User is required'],
+          validate: {
+            validator: (userId) => new Promise((resolve, reject) => {
+              User.findById(userId, (err, user) => {
+                if (user === null)
+                  reject("User does not exists");
+                else
+                  resolve();
+              })
+            })
+          }
+        },
+        content: String
+      }
+    ]
+  },
   studentInfo: {
     type: StudentSchema,
     default: function () {
