@@ -23,6 +23,19 @@ const UniversitySchema = new Schema({
   courses: {
     type: [CourseSchema],
     default: []
+  },
+  rankings: {
+    type: [{
+      studentId: {
+        type: {
+          studentId: {
+            type: Schema.Types.ObjectId,
+            required: [true, 'id is required']
+          }
+        }
+      }
+    }],
+    default: []
   }
 });
 

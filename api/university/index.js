@@ -18,6 +18,15 @@ router.get('/concernedDepartment/:concernedDepartment', [
   UniversityController.getByMajor
 ]);
 
+router.post('/:univId/rankings/', [
+    UniversityController.addStudentToRanking
+]);
+
+/*
+router.put('/:univId/rankings/:rankingId/student/:studentId', [
+  UniversityController.updateStudentRanking
+]);
+*/
 
 router.get('/:univId/courses', [
   UniversityController.getCoursesByUnivIdSemesterAndLastYear
