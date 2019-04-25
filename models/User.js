@@ -51,7 +51,6 @@ UserSchema = new Schema({
               sendedTo:{
                 type: Schema.Types.ObjectId,
                 ref: 'user',
-                unique: true,
                 required: [true, 'User is required'],
                 validate: {
                   validator: (userId) => new Promise((resolve, reject) => {
@@ -75,7 +74,6 @@ UserSchema = new Schema({
         receivedFrom:{
           type: Schema.Types.ObjectId,
           ref: 'user',
-          unique: true,
           required: [true, 'User is required'],
           validate: {
             validator: (userId) => new Promise((resolve, reject) => {

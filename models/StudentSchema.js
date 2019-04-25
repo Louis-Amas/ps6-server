@@ -21,7 +21,6 @@ const StudentSchema = new Schema({
         university: {
           type: Schema.Types.ObjectId,
           ref: 'university',
-          unique: true,
           required: [true, 'University is required'],
           validate: {
             validator: (univId) => new Promise((resolve, reject) => {

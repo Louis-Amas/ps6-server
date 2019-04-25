@@ -22,11 +22,9 @@ router.post('/:univId/rankings/', [
     UniversityController.addStudentToRanking
 ]);
 
-/*
-router.put('/:univId/rankings/:rankingId/student/:studentId', [
+router.put('/:univId/student/:studentId', [
   UniversityController.updateStudentRanking
 ]);
-*/
 
 router.get('/:univId/courses', [
   UniversityController.getCoursesByUnivIdSemesterAndLastYear

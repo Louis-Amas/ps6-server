@@ -67,6 +67,23 @@ exports.addStudentToRanking = (req, res) =>
       .then((univ) => res.status(200).json(univ))
       .catch((err) => res.status(400).send(err));
   });
+
+exports.updateStudentRanking = (req, res) =>
+  UniversityModel.findById(req.params.univId, (err, university) => {
+    if (err || university == null)
+      return res.status(404).send(err);
+
+    const univCopy = university.toObject();
+    let rankings = univCopy.rankings;
+    rankings = rankings.filter(elem => elem.studentId.toString() === req.params.studentId);
+    rankings.splice(req.body.position, 0, req.body.studentId);
+
+    univCopy.rankings = rankings;
+    university.set(univCopy);
+    university.save()
+      .then((univ) => res.status(200).json(univ))
+      .catch((err) => res.status(400).send(err));
+  });
 /*
 const getRankingByIdFromUniv = (univ, rankingId) => {
   const rankings = univ.rankings;
