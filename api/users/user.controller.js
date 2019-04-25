@@ -8,6 +8,18 @@ const formatUser = (user) => {
   return usr;
 };
 
+const formatSender = (message) => {
+  const msg = message.toObject();
+  delete msg.receivedFrom.__v;
+  delete msg.receivedFrom.password;
+  delete msg.receivedFrom.phoneNumber;
+  delete msg.receivedFrom.createAt;
+  delete msg.receivedFrom.birthDate;
+  delete msg.receivedFrom.sendedMessage;
+  delete msg.receivedFrom.receivedMessage;
+  return msg;
+};
+
 exports.returnConnectedUser = (req, res) => {
   res.status(200).send(req.body.connectedUser);
 };
@@ -36,9 +48,14 @@ exports.delete = (req, res) => {
 };
 
 exports.getById = (req, res) => {
-  UserModel.findByIdWithPostAndCourses(req.params.id)
-    .then(user => res.status(200).json(formatUser(user)))
-    .catch(err => res.status(err.status).json(err.msg));
+  UserModel.findById(req.params.id).populate('studentInfo.wishes.university')
+      .populate('receivedMessage.receivedFrom')
+      .exec((err, user) => {
+        if (err || user == null)
+          return res.status(404).json(err);
+        user.receivedMessage = user.receivedMessage.map(msg => formatSender(msg));
+        return res.status(200).json(formatUser(user))
+      })
 };
 
 exports.insert = (req, res) => {
