@@ -64,6 +64,29 @@ const StudentSchema = new Schema({
     enum: ['waitStudent', 'waitTeacher', 'waitBriVerif', 'waitValidate', 'validate'],
     default: 'waitStudent'
   },
+  notes: {
+    type: [
+      {
+        year: {
+          type: Date,
+          required: [true, 'Date is required']
+        },
+        schoolLevel: {
+          type: String,
+          required: [true, 'SchoolLevel is required']
+        },
+        school: {
+          type: String,
+          required: [true, 'School is required']
+        },
+        note: {
+          type: Number,
+          required: [true, 'Note is required']
+        }
+      },
+    ],
+    default: []
+  }
 });
 
 StudentSchema.pre('save', function (next) {
