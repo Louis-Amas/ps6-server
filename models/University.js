@@ -2,6 +2,17 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const CourseSchema = require('./CourseSchema');
 
+
+const rankingSchema = new Schema({
+  studentId: {
+    type: {
+      studentId: {
+        type: Schema.Types.ObjectId,
+        required: [true, 'id is required']
+      }
+    }
+  }
+}, { _id: false});
 const UniversitySchema = new Schema({
   name: {
     type: String,
@@ -25,16 +36,7 @@ const UniversitySchema = new Schema({
     default: []
   },
   rankings: {
-    type: [{
-      studentId: {
-        type: {
-          studentId: {
-            type: Schema.Types.ObjectId,
-            required: [true, 'id is required']
-          }
-        }
-      }
-    }],
+    type: [rankingSchema],
     default: []
   }
 });

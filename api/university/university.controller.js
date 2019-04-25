@@ -75,8 +75,8 @@ exports.updateStudentRanking = (req, res) =>
 
     const univCopy = university.toObject();
     let rankings = univCopy.rankings;
-    rankings = rankings.filter(elem => elem.studentId.toString() === req.params.studentId);
-    rankings.splice(req.body.position, 0, req.body.studentId);
+    rankings = rankings.filter(elem => elem.studentId.toString() !== req.params.studentId);
+    rankings.splice(req.body.position, 0, {studentId: req.params.studentId});
 
     univCopy.rankings = rankings;
     university.set(univCopy);
