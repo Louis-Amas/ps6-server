@@ -49,7 +49,7 @@ const updateWishPosition = (user, univId, newPosition) => {
 exports.get = (req, res) => {
   UserModel.find({role: "student"}).populate('studentInfo.wishes.university')
       .exec((err, users) => {
-      if (err || user == null)
+      if (err || users == null)
           return res.status(404).send();
         users = users.map(students => formatStudent(students));
         return res.status(200).json(users);

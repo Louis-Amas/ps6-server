@@ -2,12 +2,14 @@ const {Router} = require('express');
 const UserController = require('./user.controller');
 const StudentRouter = require('./students');
 const TeacherRouter = require('./teachers');
+const BriRouter = require('./bri');
 
 
 const router = new Router();
 
 router.use('/student', StudentRouter);
 router.use('/teacher', TeacherRouter);
+router.use('/bri', BriRouter);
 
 router.get('/', [
   UserController.get
