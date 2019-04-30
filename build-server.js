@@ -9,7 +9,8 @@ module.exports = (cb) => {
   const app = express();
   app.disable('x-powered-by');
   app.use(cors());
-  app.use(bodyParser.json({}));
+  app.use(bodyParser.json({limit: '50mb'}));
+  app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
   app.use(morgan('[:date[iso]] :method :url :status :response-time ms - :res[content-length]'));
   app.use('/api', api);
   app.use('*', (req, res) => res.status(404).end());
