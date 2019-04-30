@@ -41,6 +41,4 @@ router.post('/:id/message', [
   UserController.sendMessage
 ]);
 
-
-
 module.exports = router;

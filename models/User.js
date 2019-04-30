@@ -134,7 +134,7 @@ User.findByEmail = (mail) => {
 User.findStudentsByStatus = (status) =>
   new Promise((resolve, reject) => User.find({
     "studentInfo.stateValidation": status
-  }, (err, users) => {
+  }).populate('studentInfo.wishes.university').exec((err, users) => {
     if (err)
       return reject({status: 400, err: err});
     if (users === null)
