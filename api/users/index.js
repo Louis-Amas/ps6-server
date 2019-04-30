@@ -17,7 +17,7 @@ router.get('/', [
 
 router.get('/:id', [
   UserController.isAuth,
-  UserController.isAuthUserOwner,
+  UserController.verifyPermissionsUser(['bri', 'teacher']),
   UserController.getById
 ]);
 
@@ -29,7 +29,7 @@ router.post('/', [
 
 router.put('/:id', [
   UserController.isAuth,
-  UserController.isAuthUserOwner,
+  UserController.verifyPermissionsUser([ 'teacher']),
   UserController.update
 ]);
 

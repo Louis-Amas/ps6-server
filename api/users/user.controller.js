@@ -26,7 +26,7 @@ exports.returnConnectedUser = (req, res) => {
 
 exports.verifyPermissionsUser = (permission) =>
   (req, res, next) => {
-    if (permission.includes(req.body.connectedUser.role))
+    if (permission.includes(req.body.connectedUser.role) || req.body.connectedUser._id.toString() === req.params.id)
       return next();
     return res.status(401).json({err: 'Not sufficient permission'});
   };
@@ -112,7 +112,7 @@ exports.update = (req, res) => {
 };
 
 exports.isAuthUserOwner = (req, res, next) => {
-  if (req.body.connectedUser._id.toString() === req.params.id || req.body.connectedUser.role === "teacher")
+  if (req.body.connectedUser._id.toString() === req.params.id)
     return next();
   return res.status(401).json("Unauthorized");
 };
