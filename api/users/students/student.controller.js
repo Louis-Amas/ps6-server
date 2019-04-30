@@ -129,10 +129,9 @@ exports.updateWish = (req, res) => {
 
 exports.updateStudent = (req, res) => {
     UserModel.findById(req.params.id, (err, user) => {
-        if (req.body.stateValidation === undefined)
-            return res.status(400).json(err);
         const student = user.toObject();
-        student.studentInfo.stateValidation = req.body.stateValidation;
+        for (let key in req.body)
+          student.studentInfo[key] = req.body[key]
         user.set(student);
         user.save()
             .then((user) => res.status(201).json(formatStudent(user)))

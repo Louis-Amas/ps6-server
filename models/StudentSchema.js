@@ -2,6 +2,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const University = require('./University');
 
+
+const NotesSchema = new Schema({
+  year: {
+    type: Number,
+    required: [true, 'Date is required']
+  },
+  schoolLevel: {
+    type: String,
+    required: [true, 'SchoolLevel is required']
+  },
+  school: {
+    type: String,
+    required: [true, 'School is required']
+  },
+  note: {
+    type: Number,
+    required: [true, 'Note is required']
+  }
+}, { _id: false });
 const StudentSchema = new Schema({
   major: {
     type: String,
@@ -65,26 +84,7 @@ const StudentSchema = new Schema({
     default: 'waitStudent'
   },
   notes: {
-    type: [
-      {
-        year: {
-          type: Date,
-          required: [true, 'Date is required']
-        },
-        schoolLevel: {
-          type: String,
-          required: [true, 'SchoolLevel is required']
-        },
-        school: {
-          type: String,
-          required: [true, 'School is required']
-        },
-        note: {
-          type: Number,
-          required: [true, 'Note is required']
-        }
-      },
-    ],
+    type: [NotesSchema],
     default: []
   }
 });
