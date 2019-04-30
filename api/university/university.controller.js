@@ -5,8 +5,11 @@ exports.get = (req, res) =>
   UniversityModel.find().then(university => res.status(200).json(university));
 
 exports.getById = (req, res) =>
-  UniversityModel.findById(req.params.univId)
-    .then(university => university !== null ? res.status(200).json(university) : res.status(404).send());
+  UniversityModel.findById(req.params.univId).populate('rankings.studentId').exec( (err, university) => {
+      if (err)
+        return res.status(404).send();
+      return university !== null ? res.status(200).json(university) : res.status(404).send()
+    });
 
 exports.insert = (req, res) => {
   const univ = new UniversityModel(req.body);
@@ -62,10 +65,11 @@ exports.addStudentToRanking = (req, res) =>
   UniversityModel.findById(req.params.univId, (err, university) => {
     if (err || university == null)
       return res.status(404).send(err);
+    req.body.studentId = new ObjectId(req.body.studentId);
     university.rankings.push(req.body);
     university.save()
       .then((univ) => res.status(200).json(univ))
-      .catch((err) => res.status(400).send(err));
+      .catch((err) => res.status(400).json(err.message));
   });
 
 exports.updateStudentRanking = (req, res) =>
@@ -84,65 +88,7 @@ exports.updateStudentRanking = (req, res) =>
       .then((univ) => res.status(200).json(univ))
       .catch((err) => res.status(400).send(err));
   });
-/*
-const getRankingByIdFromUniv = (univ, rankingId) => {
-  const rankings = univ.rankings;
-  let ranking;
-  rankings.forEach((curr) => {
-    if (curr._id.toString() === rankingId.toString())
-      ranking = curr.students;
-  });
-  return ranking;
-};
 
-const setRankingByIdFromUniv = (univ, rankingId, newRanking) => {
-  for (let rank in univ.rankings)
-    if (rank._id === rankingId)
-      rank = newRanking;
-  return univ;
-};*/
-
-/*exports.insertNewStudentInRanking = (req, res) =>
-  UniversityModel.findById(req.params.univId, (err, university) => {
-    if (err || university === null)
-      return res.status(404).send(err);
-    let univCopy = university.toObject();
-    const ranking = getRankingByIdFromUniv(univCopy, req.params.rankingId);
-    ranking.push(req.body);
-    univCopy = setRankingByIdFromUniv(univCopy, req.params.rankingId, ranking);
-    university.set(univCopy);
-    university.save()
-      .then((univ) => res.status(200).json(univ))
-      .catch((err) => res.status(400).send(err));
-
-  });
-
-
-exports.updateStudentRanking = (req, res) => {
-  UniversityModel.findById(req.params.univId, (err, university) => {
-    if (err || university === null)
-      return res.status(404).send(err);
-
-    let univCopy = university.toObject();
-    let ranking = getRankingByIdFromUniv(univCopy, req.params.rankingId);
-
-    if (req.body.position > ranking.length - 1 || req.body.position < 0)
-      return res.status(400).send();
-
-    const targetObjectId = req.params.studentId.toString();
-    console.log(ranking[0].studentId.toString());
-    ranking = ranking.filter((elem) => elem.studentId.toString() !==  targetObjectId);
-
-    ranking.splice(req.body.position, 0, req.body.studentId);
-
-    univCopy = setRankingByIdFromUniv(univCopy, req.params.rankingId, ranking);
-
-    university.set(univCopy);
-    university.save()
-      .then((univ) => res.status(200).json(univ))
-      .catch((err) => res.status(400).send(err));
-  })
-};*/
 
 exports.insertCourseByUnivId = (req, res) =>
   UniversityModel.findById(req.params.univId)

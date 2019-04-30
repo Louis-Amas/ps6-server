@@ -5,14 +5,13 @@ const CourseSchema = require('./CourseSchema');
 
 const rankingSchema = new Schema({
   studentId: {
-    type: {
-      studentId: {
-        type: Schema.Types.ObjectId,
-        required: [true, 'id is required']
-      }
-    }
+    type: Schema.ObjectId,
+    ref: 'user',
+    required: [true, 'studentId is required']
   }
 }, { _id: false});
+
+
 const UniversitySchema = new Schema({
   name: {
     type: String,
@@ -41,6 +40,26 @@ const UniversitySchema = new Schema({
   }
 });
 
+UniversitySchema.pre('save', function(next) {
+  const university = this.toObject();
+  const res = university.rankings.reduce((acc, curr) => {
+    if (acc[curr.studentId.toString()])
+      acc[curr.studentId.toString()] += 1;
+    else
+      acc[curr.studentId.toString()] = 1;
+    return acc;
+  }, {});
+
+  for (let key in res) {
+    if (res[key] > 1) {
+      throw new Error("studentId already in rankings");
+    }
+
+  }
+  next();
+
+
+});
 mongoose.model('university', UniversitySchema);
 
 const University = mongoose.model('university');
