@@ -10,15 +10,14 @@ const BriSchema = new Schema({
                     type: TimeSlotSchema,
                     required: [true, "Time slot is required"]
                 },
-                reserved: {
+                available: {
                     type: [{
-                        studentId: {
+                        reservedBy: {
                             type: Schema.Types.ObjectId,
-                            required: [true, "Student is required"]
                         },
-                        studentTimeSlot: {
+                        slot: {
                             type: TimeSlotSchema,
-                            required: [true, "Student time slot is required"]
+                            required: [true, "time slot is required"]
                         }
                     }],
                     default: []
