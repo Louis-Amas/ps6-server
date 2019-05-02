@@ -18,11 +18,15 @@ router.get('/status/:status', [
   StudentController.getStudentsByValidateStatus
 ]);
 
+router.get('/wishes/university/:univId', [
+  StudentController.getStudentByUnivWishes
+]);
 
 router.post('/:id/attachements', [
   StudentController.stateVerify,
   StudentController.insertAttachement
 ]);
+
 
 router.post('/:id/wishes', [
   StudentController.stateVerify,

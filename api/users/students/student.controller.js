@@ -1,5 +1,6 @@
 const UserModel = require("../../../models/User");
 const UniversityModel = require("../../../models/University");
+const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.stateVerify = (req, res, next) => {
     UserModel.findById(req.params.id, (err, user) => {
@@ -14,23 +15,6 @@ exports.stateVerify = (req, res, next) => {
         });
     });
 };
-
-
-const computeRankOfStudentByWishes = (student, univId) => new Promise((
-  (resolve, reject) =>  UniversityModel.findById(univId, (err, univ) => {
-    if (err) return reject(err);
-    const rankings = univ.rankings.toObject().map(rank => rank.studentId);
-    const wish = student.studentInfo.wishes
-      .filter(wish => wish.university.toString() === univId);
-
-    const otherWishes = student.studentInfo.wishes
-      .filter(wish => wish.university.toString() === univId);
-
-    wish.rank2 = rankings.indexOf(wish.university);
-    otherWishes.push(wish);
-    student.studentInfo.wishes = otherWishes;
-    resolve(student);
-  })));
 
 
 const formatStudent = (student) => {
@@ -84,6 +68,27 @@ exports.get = (req, res) => {
       })
 };
 
+
+exports.getStudentByUnivWishes = (req, res) => {
+  UserModel
+    .find({"studentInfo.wishes.university": new ObjectId(req.params.univId)})
+    .populate('studentInfo.wishes.university')
+    .exec(
+    (err, users) => {
+      if (err || users === null)
+        return res.status(404).send();
+
+      users.map(user => {
+        let i = 0;
+        for (let wish of user.studentInfo.wishes) {
+          const rankings = wish.university.rankings.map(rank => rank.studentId.toString());
+          user.studentInfo.wishes[i].rank = rankings.indexOf(user._id.toString());
+          ++i;
+        }
+      });
+      return res.status(200).json(users);
+    });
+};
 
 exports.insertWish = (req, res) => {
   UserModel.findById(req.params.id, (err, user) => {
