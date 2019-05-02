@@ -1,4 +1,5 @@
 const UserModel = require("../../../models/User");
+const UniversityModel = require("../../../models/University");
 
 exports.stateVerify = (req, res, next) => {
     UserModel.findById(req.params.id, (err, user) => {
@@ -13,6 +14,24 @@ exports.stateVerify = (req, res, next) => {
         });
     });
 };
+
+
+const computeRankOfStudentByWishes = (student, univId) => new Promise((
+  (resolve, reject) =>  UniversityModel.findById(univId, (err, univ) => {
+    if (err) return reject(err);
+    const rankings = univ.rankings.toObject().map(rank => rank.studentId);
+    const wish = student.studentInfo.wishes
+      .filter(wish => wish.university.toString() === univId);
+
+    const otherWishes = student.studentInfo.wishes
+      .filter(wish => wish.university.toString() === univId);
+
+    wish.rank2 = rankings.indexOf(wish.university);
+    otherWishes.push(wish);
+    student.studentInfo.wishes = otherWishes;
+    resolve(student);
+  })));
+
 
 const formatStudent = (student) => {
   const usr = student.toObject();
@@ -33,6 +52,7 @@ const removeAndUpdateWish = (user, univId) => {
   return student;
 };
 
+
 const updateWishPosition = (user, univId, newPosition) => {
   const student = user.toObject();
   const curWish = student.studentInfo.wishes.find(w => w.university._id.equals(univId));
@@ -48,9 +68,17 @@ const updateWishPosition = (user, univId, newPosition) => {
 
 exports.get = (req, res) => {
   UserModel.find({role: "student"}).populate('studentInfo.wishes.university')
-      .exec((err, users) => {
+      .exec(async(err, users) => {
       if (err || users == null)
           return res.status(404).send();
+      users.map(user => {
+        let i = 0;
+        for (let wish of user.studentInfo.wishes) {
+          const rankings = wish.university.rankings.map(rank => rank.studentId.toString());
+          user.studentInfo.wishes[i].rank = rankings.indexOf(user._id.toString());
+          ++i;
+        }
+      });
         users = users.map(students => formatStudent(students));
         return res.status(200).json(users);
       })

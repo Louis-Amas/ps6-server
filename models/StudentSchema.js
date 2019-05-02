@@ -57,6 +57,7 @@ const StudentSchema = new Schema({
           type: Schema.Types.ObjectId,
           ref: 'university.courses._id'
         }],
+        rank: Number,
         position: Number,
         ECTS_count: Number,
         semester: Number

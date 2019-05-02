@@ -1,5 +1,8 @@
 const UniversityModel = require("../../models/University");
+const UserModel = require('../../models/User');
+
 const ObjectId = require('mongoose').Types.ObjectId;
+
 
 exports.get = (req, res) =>
   UniversityModel.find().then(university => res.status(200).json(university));
