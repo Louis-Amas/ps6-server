@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const StudentSchema = require('./StudentSchema');
 const TeacherSchema = require('./TeacherSchema');
+const BriSchema = require('./BriSchema');
 
 UserSchema = new Schema({
   firstName: {
@@ -102,6 +103,14 @@ UserSchema = new Schema({
     type: TeacherSchema,
     default: function () {
       if (this.role === "teacher") {
+        return {}
+      }
+    }
+  },
+  briInfo: {
+    type: BriSchema,
+    default: function () {
+      if (this.role === "bri") {
         return {}
       }
     }
