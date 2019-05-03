@@ -14,6 +14,7 @@ const BriSchema = new Schema({
                     type: [{
                         reservedBy: {
                             type: Schema.Types.ObjectId,
+                            ref: 'user'
                         },
                         slot: {
                             type: TimeSlotSchema,
