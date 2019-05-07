@@ -147,13 +147,16 @@ exports.getStudentsByValidateStatus = (req, res) =>
 exports.updateWish = (req, res) => {
   UserModel.findByIdWithPostAndCourses(req.params.id)
     .then((user) => {
-      if (req.body.position === undefined)
-        return res.status(400).send({
-          "errors": {
-            "msg": "A position is needed"
-          }
-        });
-      user.set(updateWishPosition(user, req.params.univId, req.body.position));
+      let student = user.toObject();
+      if (req.body.position !== undefined)
+          student = updateWishPosition(user, req.params.univId, req.body.position);
+      if(req.body.courses !== undefined){
+          student.studentInfo.wishes.map(w => {
+              if(w.university._id.toString() === req.params.univId)
+                w.courses = req.body.courses;
+          });
+      }
+      user.set(student);
       user.save()
         .then((user) => res.status(201).json(user.studentInfo.wishes))
         .catch(err => res.status(400).json(err));
@@ -165,7 +168,7 @@ exports.updateStudent = (req, res) => {
     UserModel.findById(req.params.id, (err, user) => {
         const student = user.toObject();
         for (let key in req.body)
-          student.studentInfo[key] = req.body[key]
+          student.studentInfo[key] = req.body[key];
         user.set(student);
         user.save()
             .then((user) => res.status(201).json(formatStudent(user)))
