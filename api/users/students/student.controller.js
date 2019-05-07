@@ -55,14 +55,6 @@ exports.get = (req, res) => {
       .exec(async(err, users) => {
       if (err || users == null)
           return res.status(404).send();
-      users.map(user => {
-        let i = 0;
-        for (let wish of user.studentInfo.wishes) {
-          const rankings = wish.university.rankings.map(rank => rank.studentId.toString());
-          user.studentInfo.wishes[i].rank = rankings.indexOf(user._id.toString());
-          ++i;
-        }
-      });
         users = users.map(students => formatStudent(students));
         return res.status(200).json(users);
       })
@@ -71,7 +63,10 @@ exports.get = (req, res) => {
 
 exports.getStudentByUnivWishes = (req, res) => {
   UserModel
-    .find({"studentInfo.wishes.university": new ObjectId(req.params.univId)})
+    .find({
+      "studentInfo.stateValidation": "waitBriVerif",
+      "studentInfo.wishes.university": new ObjectId(req.params.univId)
+    })
     .populate('studentInfo.wishes.university')
     .exec(
     (err, users) => {
@@ -93,7 +88,8 @@ exports.getStudentByUnivWishes = (req, res) => {
 exports.insertWish = (req, res) => {
   UserModel.findById(req.params.id, (err, user) => {
     const student = user.toObject();
-    req.body.position = student.studentInfo.wishes.length + 1;
+    if (!req.body.position)
+      req.body.position = student.studentInfo.wishes.length + 1;
     student.studentInfo.wishes.push(req.body);
     user.set(student);
     user.save()

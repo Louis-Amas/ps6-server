@@ -14,6 +14,9 @@ router.post('/', [
   UniversityController.insert
 ]);
 
+router.delete('/:univId/rankings/student/:studentId', [
+  UniversityController.removeStudentFromRanking
+]);
 router.get('/concernedDepartment/:concernedDepartment', [
   UniversityController.getByMajor
 ]);

@@ -69,27 +69,54 @@ exports.addStudentToRanking = (req, res) =>
     if (err || university == null)
       return res.status(404).send(err);
     req.body.studentId = new ObjectId(req.body.studentId);
-    university.rankings.push(req.body);
+
+    const univCopy = university.toObject();
+    let rankings = univCopy.rankings;
+
+    const position = req.body.position;
+    delete req.body.position;
+    rankings.splice(position, 0, req.body);
+
+    univCopy.rankings = rankings;
+    university.set(univCopy);
     university.save()
-      .then((univ) => res.status(200).json(univ))
-      .catch((err) => res.status(400).json(err.message));
+      .then((univ) => res.status(201).json(univ))
+      .catch((err) => res.status(200).json(err));
+
   });
 
+exports.removeStudentFromRanking = (req, res) =>
+  UniversityModel.findById(req.params.univId)
+    .exec((err, university) => {
+      if (err || university === null)
+        return res.status(404).send(err);
+
+      const univCopy = university.toObject();
+      univCopy.rankings = univCopy.rankings
+        .filter(elem => elem.studentId.toString() !== req.params.studentId);
+      university.set(univCopy);
+      university.save()
+        .then(university => res.status(202).json(university))
+        .catch(err => res.status(400).send(err));
+    });
+
 exports.updateStudentRanking = (req, res) =>
-  UniversityModel.findById(req.params.univId, (err, university) => {
+  UniversityModel.findById(req.params.univId).populate('rankings.studentId')
+    .exec((err, university) => {
     if (err || university == null)
       return res.status(404).send(err);
 
     const univCopy = university.toObject();
     let rankings = univCopy.rankings;
-    rankings = rankings.filter(elem => elem.studentId.toString() !== req.params.studentId);
-    rankings.splice(req.body.position, 0, {studentId: req.params.studentId});
+    rankings = rankings.filter(elem => elem.studentId._id.toString() !== req.params.studentId);
+    let user = univCopy.rankings.filter(elem => elem.studentId._id.toString() === req.params.studentId)[0];
+    rankings.splice(req.body.position, 0, user);
 
     univCopy.rankings = rankings;
     university.set(univCopy);
     university.save()
       .then((univ) => res.status(200).json(univ))
-      .catch((err) => res.status(400).send(err));
+      .catch((err) => res.status(200).json(univCopy));
   });
 
 
