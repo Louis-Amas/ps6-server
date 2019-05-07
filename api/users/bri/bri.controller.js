@@ -15,7 +15,7 @@ const createTimeSlot = (departureTime, endTime, interval) => {
     let res = [];
 
     for(let i = 0; i < end - dep; i += interval * 60000){
-        const tmp = new Date(date.getDate());
+        const tmp = new Date(date);
         tmp.setMinutes(date.getMinutes() + interval);
         res.push({ slot:{
                 departureTime: date,
