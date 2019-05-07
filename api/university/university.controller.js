@@ -8,10 +8,20 @@ exports.get = (req, res) =>
   UniversityModel.find().then(university => res.status(200).json(university));
 
 exports.getById = (req, res) =>
-  UniversityModel.findById(req.params.univId).populate('rankings.studentId').exec( (err, university) => {
+  UniversityModel.findById(req.params.univId)
+    .populate({
+      path: 'rankings.studentId',
+    })
+    .exec( (err, university) => {
       if (err)
         return res.status(404).send();
-      return university !== null ? res.status(200).json(university) : res.status(404).send()
+      UserModel.populate(university.rankings.map(student => student.studentId), {
+        path: 'studentInfo.wishes.university'
+      }, (err, result) => {
+        const unviCopy = university.toObject();
+        unviCopy.rankings = result;
+        return university !== null ? res.status(200).json(university) : res.status(404).send()
+      });
     });
 
 exports.insert = (req, res) => {

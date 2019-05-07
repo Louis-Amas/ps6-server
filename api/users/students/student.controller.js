@@ -64,7 +64,7 @@ exports.get = (req, res) => {
 exports.getStudentByUnivWishes = (req, res) => {
   UserModel
     .find({
-      "studentInfo.stateValidation": "waitBriVerif",
+      "studentInfo.stateValidation": "waitValidate",
       "studentInfo.wishes.university": new ObjectId(req.params.univId)
     })
     .populate('studentInfo.wishes.university')
@@ -73,14 +73,6 @@ exports.getStudentByUnivWishes = (req, res) => {
       if (err || users === null)
         return res.status(404).send();
 
-      users.map(user => {
-        let i = 0;
-        for (let wish of user.studentInfo.wishes) {
-          const rankings = wish.university.rankings.map(rank => rank.studentId.toString());
-          user.studentInfo.wishes[i].rank = rankings.indexOf(user._id.toString());
-          ++i;
-        }
-      });
       return res.status(200).json(users);
     });
 };
