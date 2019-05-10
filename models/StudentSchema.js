@@ -34,6 +34,10 @@ const StudentSchema = new Schema({
     type: String,
     enum: ['UNKNOWN']
   },
+  numStu: {
+    type: Number,
+    required: [true, 'student number is required']
+  },
   wishes: {
     type: [
       {

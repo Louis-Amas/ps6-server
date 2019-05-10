@@ -4,7 +4,6 @@ const formatBri = (bri) => {
     const usr = bri.toObject();
     delete usr.__v;
     delete usr.password;
-    usr.briInfo.appointment.map(a => delete a._id);
     return usr;
 };
 
