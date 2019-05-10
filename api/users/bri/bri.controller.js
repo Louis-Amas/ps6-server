@@ -54,10 +54,39 @@ exports.slotReservedByStudent = (req, res) => {
         if(err || user === null)
             return res.status(404).send();
         const bri = user.toObject();
-        bri.briInfo.appointment[req.params.numTimeSlot].available[req.params.numSlotAvailable].reservedBy = req.body.reservedBy;
-        user.set(bri)
-        user.save()
-            .then(bri => res.status(200).json(formatBri(bri)))
-            .catch(err => res.status(404).json(err))
+
+        UserModel.findById(req.body.reservedBy, (err, stu) => {
+            if(err || stu === null)
+                return res.status(404).send();
+            const student = stu.toObject();
+
+            bri.briInfo.appointment.forEach(app => {
+                app.available.forEach(av => {
+                    if(av._id.toString() === req.params.idAv.toString()){
+                        av.reservedBy = req.body.reservedBy;
+                        student.studentInfo.appointment = {timeSlot: av.slot, bri: bri._id}
+                    }
+                })
+            });
+
+            user.set(bri)
+            user.save()
+                .then(bri => {
+                    stu.set(student)
+                    stu.save()
+                        .then(s => res.status(200).json(formatBri(s)))
+                        .catch(err => res.status(404).json(err))
+                })
+                .catch(err => res.status(404).json(err))
+
+        });
+    });
+};
+
+exports.getAllAppointment = (req, res) => {
+    UserModel.find({role: 'bri'}, ['briInfo.appointment'] ,(err, users) => {
+        if(err || users === null)
+            return res.status(404).send();
+        return res.status(200).json(users);
     });
 };

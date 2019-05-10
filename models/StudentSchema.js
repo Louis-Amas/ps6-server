@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const University = require('./University');
+const TimeSlotSchema = require('./TimeSlot');
 
 
 const NotesSchema = new Schema({
@@ -90,6 +91,15 @@ const StudentSchema = new Schema({
   notes: {
     type: [NotesSchema],
     default: []
+  },
+  appointment: {
+    timeSlot:{
+      type: TimeSlotSchema
+    },
+    bri:{
+      type: Schema.Types.ObjectId,
+      ref: 'user'
+    }
   }
 });
 

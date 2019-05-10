@@ -13,8 +13,12 @@ router.post('/:id/timeSlot', [
 ]);
 
 //reservation of an available slot
-router.put('/:id/timeSlot/:numTimeSlot/slotAvailable/:numSlotAvailable', [
+router.put('/:id/appointment/available/:idAv', [
     BriController.slotReservedByStudent
+]);
+
+router.get('/appointment', [
+    BriController.getAllAppointment
 ]);
 
 module.exports = router;
