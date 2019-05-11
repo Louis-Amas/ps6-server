@@ -140,15 +140,30 @@ User.findByEmail = (mail) => {
   });
 };
 
-User.findStudentsByStatus = (status) =>
-  new Promise((resolve, reject) => User.find({
-    "studentInfo.stateValidation": status
-  }).populate('studentInfo.wishes.university').exec((err, users) => {
-    if (err)
-      return reject({status: 400, err: err});
-    if (users === null)
-      return reject({status: 404, err: ''});
-    return resolve(users);
-  }));
+User.findStudentsByStatusAndMajor = (status, major) =>
+  new Promise((resolve, reject) => {
+    if(major === undefined){
+      User.find({
+        "studentInfo.stateValidation": status,
+      }).populate('studentInfo.wishes.university').exec((err, users) => {
+        if (err)
+          return reject({status: 400, err: err});
+        if (users === null)
+          return reject({status: 404, err: ''});
+        return resolve(users);
+      })
+    } else {
+      User.find({
+        "studentInfo.stateValidation": status,
+        "studentInfo.major": major
+      }).populate('studentInfo.wishes.university').exec((err, users) => {
+        if (err)
+          return reject({status: 400, err: err});
+        if (users === null)
+          return reject({status: 404, err: ''});
+        return resolve(users);
+      })
+    }
+  });
 
 module.exports = User;

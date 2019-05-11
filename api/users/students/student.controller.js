@@ -126,7 +126,7 @@ exports.getWishes = (req, res) => {
 };
 
 exports.getStudentsByValidateStatus = (req, res) =>
-  UserModel.findStudentsByStatus(req.params.status)
+  UserModel.findStudentsByStatusAndMajor(req.params.status, req.query.major)
     .then(students => res.status(200).json(students))
     .catch(err => res.status(err.status).json(err));
 
