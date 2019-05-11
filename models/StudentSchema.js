@@ -33,7 +33,6 @@ const StudentSchema = new Schema({
   },
   lastYearMajor: {
     type: String,
-    enum: ['UNKNOWN']
   },
   numStu: {
     type: Number,
