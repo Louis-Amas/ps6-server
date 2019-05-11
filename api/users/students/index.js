@@ -22,7 +22,7 @@ router.get('/wishes/university/:univId', [
   StudentController.getStudentByUnivWishes
 ]);
 
-router.post('/:id/attachements', [
+router.post('/:id/attachments', [
   StudentController.stateVerify,
   StudentController.insertAttachement
 ]);

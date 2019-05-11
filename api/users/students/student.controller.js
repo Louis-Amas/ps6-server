@@ -95,7 +95,7 @@ exports.insertAttachement = (req, res) => {
   UserModel.findByIdWithPostAndCourses(req.params.id)
     .then(user => {
       const student = user.toObject();
-      req.body.attachements.forEach(attachement => student.studentInfo.attachments.push(attachement));
+      req.body.attachments.forEach(attachment => student.studentInfo.attachments.push(attachment));
       user.set(student);
       user.save()
         .then(updatedUser => res.status(201).json(updatedUser))
