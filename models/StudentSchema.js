@@ -76,7 +76,7 @@ const StudentSchema = new Schema({
           required: [true, 'Attachement name is required']
         },
         data: {
-          type: Buffer,
+          type: String,
           require: [true, 'data is needed']
         }
       }
