@@ -11,6 +11,7 @@ exports.getById = (req, res) =>
   UniversityModel.findById(req.params.univId)
     .populate({
       path: 'rankings.studentId',
+      select: '_id email firstName lastName studentInfo.wishes studentInfo.notes'
     })
     .exec( (err, university) => {
       if (err)
@@ -111,7 +112,7 @@ exports.removeStudentFromRanking = (req, res) =>
     });
 
 exports.updateStudentRanking = (req, res) =>
-  UniversityModel.findById(req.params.univId).populate('rankings.studentId')
+  UniversityModel.findById(req.params.univId)
     .exec((err, university) => {
     if (err || university == null)
       return res.status(404).send(err);
@@ -125,8 +126,12 @@ exports.updateStudentRanking = (req, res) =>
     univCopy.rankings = rankings;
     university.set(univCopy);
     university.save()
-      .then((univ) => res.status(200).json(univ))
-      .catch((err) => res.status(200).json(univCopy));
+      .then((univ) => {
+        res.status(200).json(univ);
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
   });
 
 

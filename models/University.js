@@ -41,7 +41,7 @@ const UniversitySchema = new Schema({
 });
 
 UniversitySchema.pre('save', function(next) {
-  const university = this.toObject();
+/*  const university = this.toObject();
   const res = university.rankings.reduce((acc, curr) => {
     if (acc[curr.studentId.toString()])
       acc[curr.studentId.toString()] += 1;
@@ -55,7 +55,7 @@ UniversitySchema.pre('save', function(next) {
       throw new Error("studentId already in rankings");
     }
 
-  }
+  }*/
   next();
 
 
