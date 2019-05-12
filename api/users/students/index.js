@@ -27,6 +27,15 @@ router.post('/:id/attachments', [
   StudentController.insertAttachement
 ]);
 
+router.delete('/:id/attachments/:filename', [
+  StudentController.stateVerify,
+  StudentController.removeAttachment
+]);
+
+router.post('/:id/notes', [
+  StudentController.stateVerify,
+  StudentController.insertNote
+]);
 
 router.post('/:id/wishes', [
   StudentController.stateVerify,

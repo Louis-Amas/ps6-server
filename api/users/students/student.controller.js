@@ -90,7 +90,6 @@ exports.insertWish = (req, res) => {
   })
 };
 
-
 exports.insertAttachement = (req, res) => {
   UserModel.findByIdWithPostAndCourses(req.params.id)
     .then(user => {
@@ -102,6 +101,32 @@ exports.insertAttachement = (req, res) => {
         .catch(err => res.status(400).json(err));
     })
     .catch(err => res.status(err.status).send(err.msg))
+};
+
+exports.removeAttachment = (req, res) => {
+    UserModel.findByIdWithPostAndCourses(req.params.id)
+        .then(user => {
+            const student = user.toObject();
+            student.studentInfo.attachment = student.studentInfo.attachment.filter(a => a.name !== req.params.filename);
+            user.set(student);
+            user.save()
+                .then(updatedUser => res.status(201).json(updatedUser))
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.status(err.status).send(err.msg))
+};
+
+exports.insertNote = (req, res) => {
+    UserModel.findByIdWithPostAndCourses(req.params.id)
+        .then(user => {
+            const student = user.toObject();
+            student.studentInfo.notes.push(req.body.note);
+            user.set(student);
+            user.save()
+                .then(updatedUser => res.status(201).json(updatedUser))
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.status(err.status).send(err.msg))
 };
 
 
