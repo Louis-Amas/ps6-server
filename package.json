@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest",
-    "db": "mongo ps6 --eval 'db.dropDatabase()' ; mongoimport --db ps6 -c users utils/bd/users.json ; mongoimport --db ps6 -c universities utils/bd/universities.json"
+    "db": "mongo ps6 --eval 'db.dropDatabase()' ; mongoimport --db ps6 -c users utils/bd/users.json ; mongoimport --db ps6 -c universities utils/bd/universities.json",
+    "dbsave": "mongoexport --db ps6 -c users  --out utils/bd/users.json ; mongoexport --db ps6 -c universities --out utils/bd/universities.json"
   },
   "repository": {
     "type": "git",
