@@ -37,6 +37,11 @@ router.post('/:id/notes', [
   StudentController.insertNote
 ]);
 
+router.delete('/:id/notes/:noteId', [
+  StudentController.stateVerify,
+  StudentController.removeNotes
+]);
+
 router.post('/:id/wishes', [
   StudentController.stateVerify,
   StudentController.insertWish

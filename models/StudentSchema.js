@@ -21,7 +21,7 @@ const NotesSchema = new Schema({
     type: Number,
     required: [true, 'Note is required']
   }
-}, { _id: false });
+});
 const StudentSchema = new Schema({
   major: {
     type: String,

@@ -4,6 +4,9 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.stateVerify = (req, res, next) => {
     UserModel.findById(req.params.id, (err, user) => {
+        if(err || user === null){
+            return res.status(404).send();
+        }
         if(user.studentInfo.stateValidation === "waitStudent"){
             req.body.user = user;
             return next();
@@ -108,6 +111,19 @@ exports.removeAttachment = (req, res) => {
         .then(user => {
             const student = user.toObject();
             student.studentInfo.attachments = student.studentInfo.attachments.filter(a => a.name !== req.params.filename);
+            user.set(student);
+            user.save()
+                .then(updatedUser => res.status(201).json(updatedUser))
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.status(400).send(err.msg))
+};
+
+exports.removeNotes = (req, res) => {
+    UserModel.findByIdWithPostAndCourses(req.params.id)
+        .then(user => {
+            const student = user.toObject();
+            student.studentInfo.notes = student.studentInfo.notes.filter(a => a._id.toString() !== req.params.noteId.toString());
             user.set(student);
             user.save()
                 .then(updatedUser => res.status(201).json(updatedUser))
