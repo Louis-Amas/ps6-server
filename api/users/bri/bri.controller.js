@@ -36,16 +36,18 @@ exports.getAll = (req, res) => {
 };
 
 exports.addTimeSlot = (req, res) => {
-    UserModel.findById(req.params.id, (err, user) => {
-        if(err || user === null)
-            return res.status(404).send();
-        const bri = user.toObject();
-        const slots = createTimeSlot(req.body.departureTime, req.body.endTime, 15);
-        bri.briInfo.appointment.push({timeSlot: req.body, available: slots});
-        user.set(bri);
-        user.save()
-            .then(bri => res.status(200).json(formatBri(bri)))
-            .catch(err => res.status(404).json(err))
+    UserModel.findById(req.params.id).populate({path: 'briInfo.appointment.available.reservedBy',
+        select: 'firstName lastName studentInfo.major'})
+        .exec((err, user) => {
+            if(err || user === null)
+                return res.status(404).send();
+            const bri = user.toObject();
+            const slots = createTimeSlot(req.body.departureTime, req.body.endTime, 15);
+            bri.briInfo.appointment.push({timeSlot: req.body, available: slots});
+            user.set(bri);
+            user.save()
+                .then(bri => res.status(200).json(formatBri(bri)))
+                .catch(err => res.status(404).json(err))
     })
 };
 
