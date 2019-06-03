@@ -106,7 +106,6 @@ const StudentSchema = new Schema({
     status:{
       type: String,
       enum: ['none','waiting','inProcess','done'],
-      default: 'none'
     }
   }
 });

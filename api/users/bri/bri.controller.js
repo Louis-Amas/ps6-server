@@ -37,7 +37,7 @@ exports.getAll = (req, res) => {
 
 exports.addTimeSlot = (req, res) => {
     UserModel.findById(req.params.id).populate({path: 'briInfo.appointment.available.reservedBy',
-        select: 'firstName lastName studentInfo.major'})
+        select: 'firstName lastName studentInfo.major studentInfo.appointment.status'})
         .exec((err, user) => {
             if(err || user === null)
                 return res.status(404).send();
@@ -66,7 +66,7 @@ exports.slotReservedByStudent = (req, res) => {
                 app.available.forEach(av => {
                     if(av._id.toString() === req.params.idAv.toString()){
                         av.reservedBy = req.body.reservedBy;
-                        student.studentInfo.appointment = {timeSlot: av.slot, bri: bri._id}
+                        student.studentInfo.appointment = {timeSlot: av.slot, bri: bri._id, status: "none"}
                     }
                 })
             });
@@ -86,9 +86,12 @@ exports.slotReservedByStudent = (req, res) => {
 };
 
 exports.getAllAppointment = (req, res) => {
-    UserModel.find({role: 'bri'}, ['briInfo.appointment', 'firstName', 'lastName'] ,(err, users) => {
-        if(err || users === null)
-            return res.status(404).send();
-        return res.status(200).json(users);
-    });
+    UserModel.find({role: 'bri'}, ['briInfo.appointment', 'firstName', 'lastName'])
+        .populate({path: 'briInfo.appointment.available.reservedBy',
+            select: 'firstName lastName studentInfo.major studentInfo.appointment.status'})
+        .exec((err, users) => {
+            if(err || users === null)
+                return res.status(404).send();
+            return res.status(200).json(users);
+        });
 };
