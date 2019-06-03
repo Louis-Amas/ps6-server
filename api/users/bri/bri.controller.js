@@ -86,7 +86,7 @@ exports.slotReservedByStudent = (req, res) => {
 };
 
 exports.getAllAppointment = (req, res) => {
-    UserModel.find({role: 'bri'}, ['briInfo.appointment'] ,(err, users) => {
+    UserModel.find({role: 'bri'}, ['briInfo.appointment', 'firstName', 'lastName'] ,(err, users) => {
         if(err || users === null)
             return res.status(404).send();
         return res.status(200).json(users);
