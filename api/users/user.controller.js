@@ -40,7 +40,7 @@ exports.getById = (req, res) => {
       .populate({path:'receivedMessage.receivedFrom',
         select: 'firstName lastName'})
       .populate({path: 'briInfo.appointment.available.reservedBy',
-        select: 'firstName lastName studentInfo.major'})
+        select: 'firstName lastName studentInfo.major studentInfo.appointment.status'})
       .exec((err, user) => {
         if (err || user == null)
           return res.status(404).json(err);
