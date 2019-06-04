@@ -65,19 +65,32 @@ exports.addTimeSlot = (req, res) => {
 };
 
 exports.acceptWaitingStudent = (req, res) => {
-    UserModel.findById(req.params.briId).populate({path: 'briInfo.appointment.available.reservedBy',
+    UserModel.findById(req.params.id).populate({path: 'briInfo.appointment.available.reservedBy',
         select: 'firstName lastName studentInfo.major studentInfo.appointment.status'})
         .exec((err, bri) => {
+            if(err || bri === null)
+                return res.status(404).send();
+            let findOne = false;
             for (let app of bri.briInfo.appointment) {
-                for (let avai of app.available) {
-                    if (avai.reservedBy.studentInfo.appointment.status === 'waiting') {
-                        avai.reservedBy.studentInfo.appointment.status = 'inProcess';
-                        avai.reservedBy.save()
-                            .then((user) => {
-                              return res.status(200).json(bri);
-                            })
-                            .catch(err => res.status(400).send(err));
+                const currDate = new Date(req.params.timeSlot);
+                const appDate = new Date(app.timeSlot.departureTime);
+                if(currDate.getDate() === appDate.getDate()
+                    && currDate.getMonth() === appDate.getMonth()
+                    && currDate.getFullYear() === appDate.getFullYear()){
+                    for (let avai of app.available) {
+                        if(avai.reservedBy !== undefined){
+                            if (avai.reservedBy.studentInfo.appointment.status === 'waiting') {
+                                avai.reservedBy.studentInfo.appointment.status = 'inProcess';
+                                findOne = true;
+                                avai.reservedBy.save()
+                                    .then(() => {
+                                        return res.status(200).json(bri);
+                                    })
+                                    .catch(err => res.status(400).send(err));
+                            }
+                        }
                     }
+                    if(!findOne) return res.status(400).send()
                 }
             }
         });

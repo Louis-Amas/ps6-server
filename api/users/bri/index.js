@@ -12,7 +12,7 @@ router.post('/:id/timeSlot', [
    BriController.addTimeSlot
 ]);
 
-router.put('/:id/appointment/accept', [
+router.put('/:id/appointment/:timeSlot/accept', [
     BriController.acceptWaitingStudent
 ]);
 //reservation of an available slot
