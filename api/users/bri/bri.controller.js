@@ -51,6 +51,25 @@ exports.addTimeSlot = (req, res) => {
     })
 };
 
+exports.acceptWaitingStudent = (req, res) => {
+    UserModel.findById(req.params.briId).populate({path: 'briInfo.appointment.available.reservedBy',
+        select: 'firstName lastName studentInfo.major studentInfo.appointment.status'})
+        .exec((err, bri) => {
+            for (let app of bri.briInfo.appointment) {
+                for (let avai of app.available) {
+                    if (avai.reservedBy.studentInfo.appointment.status === 'waiting') {
+                        avai.reservedBy.studentInfo.appointment.status = 'inProcess';
+                        avai.reservedBy.save()
+                            .then((user) => {
+                              return res.status(200).json(bri);
+                            })
+                            .catch(err => res.status(400).send(err));
+                    }
+                }
+            }
+        });
+};
+
 exports.slotReservedByStudent = (req, res) => {
     UserModel.findById(req.params.id, (err, user) => {
         if(err || user === null)
