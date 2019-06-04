@@ -11,7 +11,6 @@ router.use('/users', UserRouter);
 
 router.use('/university', UniveristyRouter);
 
-
 router.get('/auth', [
   isAuth,
   returnConnectedUser

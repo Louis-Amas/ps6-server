@@ -106,3 +106,22 @@ exports.getAllAppointment = (req, res) => {
             return res.status(200).json(users);
         });
 };
+
+exports.getAppointmentByDay = (req, res) => {
+    UserModel.findById(req.params.id).populate({path: 'briInfo.appointment.available.reservedBy',
+        select: 'firstName lastName studentInfo.major studentInfo.appointment.status'})
+        .exec((err, user) => {
+            if(err || user === null)
+                return res.status(404).send();
+            else {
+                const date = new Date(req.params.timeSlot);
+                const bri = user.toObject();
+                //return date.prototype.getDay();
+                const bo = bri.briInfo.appointment.filter( app => {
+                    const dateApp = new Date(app.timeSlot.departureTime);
+                     return dateApp.getDate() === date.getDate() && dateApp.getMonth() === date.getMonth() && dateApp.getFullYear() === date.getFullYear();
+                });
+               return res.status(200).json(bo);
+            }
+        })
+};
