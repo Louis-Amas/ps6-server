@@ -42,8 +42,21 @@ exports.addTimeSlot = (req, res) => {
             if(err || user === null)
                 return res.status(404).send();
             const bri = user.toObject();
+
+            //find position to insert new time slot
+            let index = bri.briInfo.appointment.findIndex(a => {
+                const date1 = new Date(a.timeSlot.departureTime);
+                const date2 = new Date(req.body.departureTime);
+                return (date1 > date2);
+            });
+            if(index === -1)
+                index = bri.briInfo.appointment.length;
+
+            //insert time slot
             const slots = createTimeSlot(req.body.departureTime, req.body.endTime, 15);
-            bri.briInfo.appointment.push({timeSlot: req.body, available: slots});
+            bri.briInfo.appointment.splice(index, 0, {timeSlot: req.body, available: slots});
+
+            //save change
             user.set(bri);
             user.save()
                 .then(bri => res.status(200).json(formatBri(bri)))
@@ -56,7 +69,6 @@ exports.slotReservedByStudent = (req, res) => {
         if(err || user === null)
             return res.status(404).send();
         const bri = user.toObject();
-
         UserModel.findById(req.body.reservedBy, (err, stu) => {
             if(err || stu === null)
                 return res.status(404).send();
@@ -70,11 +82,10 @@ exports.slotReservedByStudent = (req, res) => {
                     }
                 })
             });
-
-            user.set(bri)
+            user.set(bri);
             user.save()
-                .then(bri => {
-                    stu.set(student)
+                .then(() => {
+                    stu.set(student);
                     stu.save()
                         .then(s => res.status(200).json(formatBri(s)))
                         .catch(err => res.status(404).json(err))
