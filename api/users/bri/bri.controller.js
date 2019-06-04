@@ -64,7 +64,9 @@ exports.addTimeSlot = (req, res) => {
     })
 };
 
-exports.acceptWaitingStudent = (req, res) => {
+exports.changeStatusOfStudent = (req, res) => {
+    console.log(req.body.lastStatus);
+    console.log(req.body.newStatus);
     UserModel.findById(req.params.id).populate({path: 'briInfo.appointment.available.reservedBy',
         select: 'firstName lastName studentInfo.major studentInfo.appointment.status'})
         .exec((err, bri) => {
@@ -79,8 +81,8 @@ exports.acceptWaitingStudent = (req, res) => {
                     && currDate.getFullYear() === appDate.getFullYear()){
                     for (let avai of app.available) {
                         if(avai.reservedBy !== undefined){
-                            if (avai.reservedBy.studentInfo.appointment.status === 'waiting') {
-                                avai.reservedBy.studentInfo.appointment.status = 'inProcess';
+                            if (avai.reservedBy.studentInfo.appointment.status === req.body.lastStatus) {
+                                avai.reservedBy.studentInfo.appointment.status = req.body.newStatus;
                                 findOne = true;
                                 avai.reservedBy.save()
                                     .then(() => {

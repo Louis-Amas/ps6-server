@@ -13,7 +13,7 @@ router.post('/:id/timeSlot', [
 ]);
 
 router.put('/:id/appointment/:timeSlot/accept', [
-    BriController.acceptWaitingStudent
+    BriController.changeStatusOfStudent
 ]);
 //reservation of an available slot
 router.put('/:id/appointment/available/:idAv', [
