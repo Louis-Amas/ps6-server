@@ -200,8 +200,19 @@ exports.updateStudent = (req, res) => {
           student.studentInfo[key] = req.body[key];
         user.set(student);
         user.save()
-            .then((user) => res.status(201).json(formatStudent(user)))
+            .then((user) =>  res.status(201).json(formatStudent(user)))
             .catch(err => res.status(400).json(err));
     });
 };
 
+exports.updateAppointmentStatus = (req, res) => {
+    UserModel.findById(req.params.id, (err, user) => {
+        const student = user.toObject();
+        for ( let key in req.body)
+            student.studentInfo.appointment.status = req.body[key];
+        user.set(student);
+        user.save()
+            .then((user) => res.status(201).json(formatStudent(user)))
+            .catch( err => res.status(400).json(err));
+    });
+};

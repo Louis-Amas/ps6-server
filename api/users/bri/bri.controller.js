@@ -26,6 +26,19 @@ const createTimeSlot = (departureTime, endTime, interval) => {
     return res;
 };
 
+function msToTime(duration) {
+    var milliseconds = parseInt((duration % 1000) / 100),
+        seconds = Math.floor((duration / 1000) % 60),
+        minutes = Math.floor((duration / (1000 * 60)) % 60),
+        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+}
+
 exports.getAll = (req, res) => {
     UserModel.find({role: "bri"}, (err, users) => {
         if (err || users == null)
@@ -153,9 +166,48 @@ exports.getAppointmentByDay = (req, res) => {
                 //return date.prototype.getDay();
                 const bo = bri.briInfo.appointment.filter( app => {
                     const dateApp = new Date(app.timeSlot.departureTime);
-                     return dateApp.getDate() === date.getDate() && dateApp.getMonth() === date.getMonth() && dateApp.getFullYear() === date.getFullYear();
+                    return dateApp.getDate() === date.getDate() && dateApp.getMonth() === date.getMonth() && dateApp.getFullYear() === date.getFullYear();
                 });
-               return res.status(200).json(bo);
+                return res.status(200).json(bo);
+                }
+
+        })
+};
+
+exports.getDelay = (req,res) => {
+    UserModel.findById(req.params.id).populate({path: 'briInfo.appointment.available.reservedBy',
+        select: 'firstName lastName studentInfo.major studentInfo.appointment.status studentInfo.appointment.timeSlot.departureTime'})
+        .exec((err, user) => {
+            if(err || user === null)
+                return res.status(404).send();
+            else {
+                const now = new Date();
+                const bri = user.toObject();
+                    let todayAppointments = bri.briInfo.appointment.filter(app => {
+                        const dateApp = new Date(app.timeSlot.departureTime);
+                        return dateApp.getDate() === now.getDate() && dateApp.getMonth() === now.getMonth() && dateApp.getFullYear() === now.getFullYear();
+                    });
+                    let endTime = new Date(0);
+                    todayAppointments.forEach(app =>
+                        app.available.forEach( av =>{
+                            const stud = av.reservedBy;
+                            if(stud !== undefined){
+                                if(stud.studentInfo.appointment.status === 'waiting'){
+                                    endTime = stud.studentInfo.appointment.timeSlot.departureTime;
+                                    console.log(endTime);
+                                }
+                            }
+                        }));
+                    if(endTime === new Date(0)) {
+                        return res.status(400).send();
+                    }
+                    else {
+                        const del = now.getTime() - endTime.getTime();
+                        const del1 = msToTime(del);
+                        console.log(del1);
+                        return res.status(200).json({delay: del1})
+                    }
+
             }
         })
 };

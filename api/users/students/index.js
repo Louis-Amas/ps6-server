@@ -61,4 +61,9 @@ router.put('/:id', [
   StudentController.updateStudent
 ]);
 
+router.put('/:id/appointment/status', [
+    StudentController.updateAppointmentStatus
+]);
+
+
 module.exports = router;

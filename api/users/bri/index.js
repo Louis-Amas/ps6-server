@@ -24,8 +24,13 @@ router.get('/appointment', [
     BriController.getAllAppointment
 ]);
 
+router.get('/:id/appointment/delay', [
+    BriController.getDelay
+]);
+
 router.get('/:id/appointment/:timeSlot', [
         BriController.getAppointmentByDay
 ]);
+
 
 module.exports = router;
