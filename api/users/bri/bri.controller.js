@@ -78,8 +78,6 @@ exports.addTimeSlot = (req, res) => {
 };
 
 exports.changeStatusOfStudent = (req, res) => {
-    console.log(req.body.lastStatus);
-    console.log(req.body.newStatus);
     UserModel.findById(req.params.id).populate({path: 'briInfo.appointment.available.reservedBy',
         select: 'firstName lastName studentInfo.major studentInfo.appointment.status'})
         .exec((err, bri) => {
@@ -99,7 +97,7 @@ exports.changeStatusOfStudent = (req, res) => {
                                 findOne = true;
                                 avai.reservedBy.save()
                                     .then(() => {
-                                        return res.status(200).json(bri);
+                                        return res.status(200).json(findOne);
                                     })
                                     .catch(err => res.status(400).send(err));
                                 return;
