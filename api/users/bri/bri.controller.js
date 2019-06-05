@@ -99,14 +99,22 @@ exports.changeStatusOfStudent = (req, res) => {
                                 findOne = true;
                                 avai.reservedBy.save()
                                     .then(() => {
-                                        return res.status(200).json(bri);
+                                        return res.status(200).send({
+                                            "lastStatus": req.body.lastStatus,
+                                            "newStatus": req.body.newStatus,
+                                            "result": findOne
+                                        });
                                     })
-                                    .catch(err => res.status(400).send(err));
+                                    .catch(err => res.status(400).send());
                                 return;
                             }
                         }
                     }
-                    if(!findOne) return res.status(400).send()
+                    if(!findOne) return res.status(200).send({
+                        "lastStatus": req.body.lastStatus,
+                        "newSatus": req.body.newStatus,
+                        "result": findOne
+                    });
                 }
             }
         });
