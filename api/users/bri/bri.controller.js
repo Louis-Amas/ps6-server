@@ -100,7 +100,8 @@ exports.changeStatusOfStudent = (req, res) => {
                                         return res.status(200).send({
                                             "lastStatus": req.body.lastStatus,
                                             "newStatus": req.body.newStatus,
-                                            "result": findOne
+                                            "result": findOne,
+                                            "studentId": avai.reservedBy._id
                                         });
                                     })
                                     .catch(err => res.status(400).send(err));
