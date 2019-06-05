@@ -3,6 +3,8 @@ const UserRouter = require('./users');
 const UniveristyRouter = require('./university');
 const isAuth = require('./users/user.controller').isAuth;
 const returnConnectedUser = require('./users/user.controller').returnConnectedUser;
+const QueueRouter = require('./queue');
+
 const router = new Router();
 
 router.get('/status', (req, res) => res.status(200).json('ok'));
@@ -10,7 +12,7 @@ router.get('/status', (req, res) => res.status(200).json('ok'));
 router.use('/users', UserRouter);
 
 router.use('/university', UniveristyRouter);
-
+router.use('/queue', QueueRouter);
 router.get('/auth', [
   isAuth,
   returnConnectedUser

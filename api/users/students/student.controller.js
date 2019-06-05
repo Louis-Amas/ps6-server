@@ -1,5 +1,4 @@
 const UserModel = require("../../../models/User");
-const UniversityModel = require("../../../models/University");
 const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.stateVerify = (req, res, next) => {
@@ -215,6 +214,25 @@ exports.updateAppointmentStatus = (req, res) => {
             user.set(student);
             user.save()
                 .then((user) => res.status(201).json(formatStudent(user)))
+                .catch( err => res.status(400).json(err));
+        }
+    });
+};
+
+exports.updateConnectedStudentToWaiting = (req, res) => {
+    UserModel.findById(req.body.connectedUser._id).exec((err, user) => {
+        const student = user.toObject();
+        if(req.body.status === undefined) {
+            return res.status(403).send("status is required");
+        } else {
+            student.studentInfo.appointment.status = 'waiting';
+            user.set(student);
+            user.save()
+                .then( _  => {
+                    res.status(201).json({
+                        message: `Vous êtes bien inscris à l'attente`
+                    })
+                })
                 .catch( err => res.status(400).json(err));
         }
     });

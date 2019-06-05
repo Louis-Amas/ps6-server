@@ -1,8 +1,3 @@
-const {Router} = require('express');
-
-const router = new Router();
-
-
 exports.getStudentForm = (req,res) => {
   return res.status(200).json({
         respUrl: "http:/student/appointment/student/arrive",
@@ -30,4 +25,3 @@ exports.getStudentForm = (req,res) => {
         }
   });
 };
-

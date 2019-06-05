@@ -103,7 +103,7 @@ exports.changeStatusOfStudent = (req, res) => {
                                             "result": findOne
                                         });
                                     })
-                                    .catch(err => res.status(400).send());
+                                    .catch(err => res.status(400).send(err));
                                 return;
                             }
                         }
@@ -255,10 +255,10 @@ exports.getTodayAppointment = (req,res) => {
                     "showedName": {
                         "departureTime": "De",
                         "endTime": "À",
-                        "firstName": "",
-                        "lastName": "",
+                        "firstName": "Prénom",
+                        "lastName": "Nom",
                     },
-                    "file": result
+                    "queue": result
                 });
             }
         })

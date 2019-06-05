@@ -65,5 +65,10 @@ router.put('/:id/appointment/status', [
     StudentController.updateAppointmentStatus
 ]);
 
+router.put('/appointment/status', [
+    UserController.isAuth,
+    StudentController.updateConnectedStudentToWaiting
+]);
+
 
 module.exports = router;
