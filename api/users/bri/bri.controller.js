@@ -102,6 +102,7 @@ exports.changeStatusOfStudent = (req, res) => {
                                         return res.status(200).json(bri);
                                     })
                                     .catch(err => res.status(400).send(err));
+                                return;
                             }
                         }
                     }
