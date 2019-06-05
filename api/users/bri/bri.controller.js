@@ -233,35 +233,49 @@ exports.getTodayAppointment = (req,res) => {
                     && appDate.getFullYear() === today.getFullYear()){
                         for (let av of app.available) {
                             if(av.reservedBy!== undefined){
+                                const color = chooseColorSwitchStatus(av.reservedBy.studentInfo.appointment.status);
                                 result.push({
-                                    "departureTime": av.slot.departureTime.getHours() + "H " + av.slot.departureTime.getMinutes() + "mn",
-                                    "endTime": av.slot.endTime.getHours() + "H " + av.slot.endTime.getMinutes() + "mn",
-                                    "status": av.reservedBy.studentInfo.appointment.status,
-                                    "firstName": av.reservedBy.firstName,
-                                    "lastName": av.reservedBy.lastName
+                                    allElem: {
+                                        "background_color": color
+                                    },
+                                    "departureTime": {
+                                        "value": av.slot.departureTime.getHours() + "H " + av.slot.departureTime.getMinutes() + "mn",
+                                        "visible": true,
+                                        "display": "De"
+                                    },
+                                    "endTime": {
+                                        "value": av.slot.endTime.getHours() + "H " + av.slot.endTime.getMinutes() + "mn",
+                                        "visible": true,
+                                        "display": "À"
+                                    },
+                                    "firstName": {
+                                        "value": av.reservedBy.firstName,
+                                        "visible": true,
+                                        "display": "Prénom"
+                                    },
+                                    "lastName": {
+                                        "value": av.reservedBy.lastName,
+                                        "display": "Nom",
+                                        visible: true
+                                    }
                                 })
                             }
                         }
                     }
                 }
                 return res.status(200).json({
-                    "color": {
-                        "status": {
-                            "none": '#FFFFFF',
-                            "waiting": '#98FB98',
-                            "inProcess": '#00aeef',
-                            "done": '#C0C0C0'
-                        }
-                    },
-                    "showedName": {
-                        "departureTime": "De",
-                        "endTime": "À",
-                        "firstName": "Prénom",
-                        "lastName": "Nom",
-                    },
+                    "type": "list",
                     "queue": result
                 });
             }
         })
+};
+
+const chooseColorSwitchStatus = (status) => {
+    let color = '#FFFFFF';
+    if (status === "waiting") color = '#98FB98';
+    else if (status === "inProcess") color = '#00AEEF';
+    else if (status === "done") color = '#C0C0C0';
+    return color;
 };
 
