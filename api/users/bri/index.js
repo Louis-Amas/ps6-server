@@ -32,5 +32,8 @@ router.get('/:id/appointment/:timeSlot', [
         BriController.getAppointmentByDay
 ]);
 
+router.get('/:id/todayAppointment', [
+    BriController.getTodayAppointment
+]);
 
 module.exports = router;
