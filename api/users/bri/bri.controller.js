@@ -97,14 +97,22 @@ exports.changeStatusOfStudent = (req, res) => {
                                 findOne = true;
                                 avai.reservedBy.save()
                                     .then(() => {
-                                        return res.status(200).json(findOne);
+                                        return res.status(200).send({
+                                            "lastStatus": req.body.lastStatus,
+                                            "newStatus": req.body.newStatus,
+                                            "result": findOne
+                                        });
                                     })
-                                    .catch(err => res.status(400).send(err));
+                                    .catch(err => res.status(400).send());
                                 return;
                             }
                         }
                     }
-                    if(!findOne) return res.status(400).send()
+                    if(!findOne) return res.status(200).send({
+                        "lastStatus": req.body.lastStatus,
+                        "newSatus": req.body.newStatus,
+                        "result": findOne
+                    });
                 }
             }
         });
@@ -193,7 +201,6 @@ exports.getDelay = (req,res) => {
                             if(stud !== undefined){
                                 if(stud.studentInfo.appointment.status === 'waiting'){
                                     endTime = stud.studentInfo.appointment.timeSlot.departureTime;
-                                    console.log(endTime);
                                 }
                             }
                         }));
@@ -203,10 +210,57 @@ exports.getDelay = (req,res) => {
                     else {
                         const del = now.getTime() - endTime.getTime();
                         const del1 = msToTime(del);
-                        console.log(del1);
                         return res.status(200).json({delay: del1})
                     }
 
             }
         })
 };
+
+exports.getTodayAppointment = (req,res) => {
+    UserModel.findById(req.params.id).populate({path: 'briInfo.appointment.available.reservedBy',
+        select: 'firstName lastName studentInfo.major studentInfo.appointment.status studentInfo.appointment.timeSlot.departureTime'})
+        .exec((err, user) => {
+            if(err || user === null)
+                return res.status(404).send();
+            else {
+                const result = [];
+                const today = new Date();
+                for (let app of user.briInfo.appointment) {
+                    const appDate = new Date(app.timeSlot.departureTime);
+                    if(appDate.getDate() === today.getDate() && appDate.getMonth() === today.getMonth()
+                    && appDate.getFullYear() === today.getFullYear()){
+                        for (let av of app.available) {
+                            if(av.reservedBy!== undefined){
+                                result.push({
+                                    "departureTime": av.slot.departureTime.getHours() + "H " + av.slot.departureTime.getMinutes() + "mn",
+                                    "endTime": av.slot.endTime.getHours() + "H " + av.slot.endTime.getMinutes() + "mn",
+                                    "status": av.reservedBy.studentInfo.appointment.status,
+                                    "firstName": av.reservedBy.firstName,
+                                    "lastName": av.reservedBy.lastName
+                                })
+                            }
+                        }
+                    }
+                }
+                return res.status(200).json({
+                    "color": {
+                        "status": {
+                            "none": '#FFFFFF',
+                            "waiting": '#98FB98',
+                            "inProcess": '#00aeef',
+                            "done": '#C0C0C0'
+                        }
+                    },
+                    "showedName": {
+                        "departureTime": "De",
+                        "endTime": "À",
+                        "firstName": "",
+                        "lastName": "",
+                    },
+                    "file": result
+                });
+            }
+        })
+};
+
