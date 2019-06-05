@@ -208,11 +208,14 @@ exports.updateStudent = (req, res) => {
 exports.updateAppointmentStatus = (req, res) => {
     UserModel.findById(req.params.id, (err, user) => {
         const student = user.toObject();
-        for ( let key in req.body)
-            student.studentInfo.appointment.status = req.body[key];
-        user.set(student);
-        user.save()
-            .then((user) => res.status(201).json(formatStudent(user)))
-            .catch( err => res.status(400).json(err));
+        if(req.body.status === undefined) {
+            return res.status(403).send("status is required");
+        } else {
+            student.studentInfo.appointment.status = req.body.status;
+            user.set(student);
+            user.save()
+                .then((user) => res.status(201).json(formatStudent(user)))
+                .catch( err => res.status(400).json(err));
+        }
     });
 };
