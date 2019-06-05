@@ -1,6 +1,6 @@
 exports.getStudentForm = (req,res) => {
   return res.status(200).json({
-        respUrl: "http:/student/appointment/student/arrive",
+        respUrl: "/api/users/student/appointment/status",
         method: "PUT",
         type: 'form',
         requiredField: [
@@ -19,9 +19,6 @@ exports.getStudentForm = (req,res) => {
         ],
         headers: {
             "Authorisation": "$email:$password"
-        },
-        body: {
-            "status": "waiting"
         }
   });
 };

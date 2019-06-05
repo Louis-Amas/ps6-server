@@ -230,6 +230,7 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
             user.save()
                 .then( _  => {
                     res.status(201).json({
+                        type: 'msg',
                         message: `Vous êtes bien inscris à l'attente`
                     })
                 })
