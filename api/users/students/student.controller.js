@@ -222,8 +222,8 @@ exports.updateAppointmentStatus = (req, res) => {
 exports.updateConnectedStudentToWaiting = (req, res) => {
     UserModel.findById(req.body.connectedUser._id).exec((err, user) => {
         const student = user.toObject();
-        if(req.body.status === undefined) {
-            return res.status(403).send("status is required");
+        if (err || student == null) {
+            return res.status(404).send();
         } else {
             student.studentInfo.appointment.status = 'waiting';
             user.set(student);
@@ -231,7 +231,7 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
                 .then( _  => {
                     res.status(201).json({
                         type: 'msg',
-                        message: `Vous êtes bien inscris à l'attente`
+                        message: `Vous êtes bien inscrit à la file d'attente`
                     })
                 })
                 .catch( err => res.status(400).json(err));
