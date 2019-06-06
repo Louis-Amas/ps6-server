@@ -62,6 +62,27 @@ exports.get = (req, res) => {
       })
 };
 
+exports.getStudentByQuery = (req, res) => {
+    const query = {};
+    if (req.query.univId !== undefined)
+        query["studentInfo.wishes.university"] = new ObjectId(req.query.univId);
+    if (req.query.major  !== undefined)
+        query["studentInfo.major"] = req.query.major;
+    if (req.query.search !== undefined)
+        query["firstName"] = {
+        "firstName" : {
+            $regex : `${req.query.search}*`
+        }
+    };
+    query['role'] = 'student';
+    UserModel.find(query)
+        .select('_id firstName lastName')
+        .exec((err, users) => {
+        if (err || users === null)
+            return res.status(404).send();
+        return res.status(200).json(users);
+    });
+};
 
 exports.getStudentByUnivWishes = (req, res) => {
   UserModel
