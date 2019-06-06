@@ -8,13 +8,13 @@ exports.getStudentForm = (req,res) => {
                type: "input",
                formatType: "email",
                showedName: "Email",
-               value: "email@test.com"
+               value: "hasnaa@etu.unice.fr"
             },
             {
                 type: "input",
                 formatType: "password",
                 showedName: "Mot de passe",
-                value: "password"
+                value: "123"
             }
         ],
         headers: {
