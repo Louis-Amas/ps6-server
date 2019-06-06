@@ -3,9 +3,6 @@ exports.getStudentForm = (req,res) => {
         respUrl: "/api/users/student/appointment/status",
         method: "PUT",
         type: 'form',
-        style: {
-            "background-color": "#fb00d2"
-        },
         requiredField: [
             {
                type: "input",
