@@ -27,7 +27,7 @@ const createTimeSlot = (departureTime, endTime, interval) => {
 };
 
 function msToTime(duration) {
-    var milliseconds = parseInt((duration % 1000) / 100),
+    let milliseconds = parseInt((duration % 1000) / 100),
         seconds = Math.floor((duration / 1000) % 60),
         minutes = Math.floor((duration / (1000 * 60)) % 60),
         hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
@@ -100,7 +100,8 @@ exports.changeStatusOfStudent = (req, res) => {
                                         return res.status(200).send({
                                             "lastStatus": req.body.lastStatus,
                                             "newStatus": req.body.newStatus,
-                                            "result": findOne
+                                            "result": findOne,
+                                            "studentId": avai.reservedBy._id
                                         });
                                     })
                                     .catch(err => res.status(400).send(err));
