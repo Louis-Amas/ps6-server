@@ -277,13 +277,6 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
             } else {
                 return res.status(201).json({
                     type: 'msg',
-                    body: {
-                        "studentId": student._id
-                    },
-                    mqtt:{
-                        msg: "studentId",
-                        request: "/ionic/arrive"
-                    },
                     style:{
                         "background-color": "red",
                         "text-align": "center",
