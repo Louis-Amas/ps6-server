@@ -3,18 +3,21 @@ exports.getStudentForm = (req,res) => {
         respUrl: "/api/users/student/appointment/status",
         method: "PUT",
         type: 'form',
+        style: {
+            "background-color": "#fb00d2"
+        },
         requiredField: [
             {
                type: "input",
                formatType: "email",
                showedName: "Email",
-               value: "hasnaa@etu.unice.fr"
+               value: ""
             },
             {
                 type: "input",
                 formatType: "password",
                 showedName: "Mot de passe",
-                value: "123"
+                value: ""
             }
         ],
         headers: {
