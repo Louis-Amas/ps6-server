@@ -231,11 +231,16 @@ exports.updateAppointmentStatus = (req, res) => {
         if(req.body.status === undefined) {
             return res.status(403).send("status is required");
         } else {
-            student.studentInfo.appointment.status = req.body.status;
-            user.set(student);
-            user.save()
-                .then((user) => res.status(201).json(formatStudent(user)))
-                .catch( err => res.status(400).json(err));
+            if (student.studentInfo.appointment !== undefined) {
+                student.studentInfo.appointment.status = req.body.status;
+                user.set(student);
+                user.save()
+                    .then((user) => res.status(201).json(formatStudent(user)))
+                    .catch( err => res.status(400).json(err));
+            } else {
+                return res.status(404).send("appointment not found");
+            }
+
         }
     });
 };
@@ -246,21 +251,33 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
         if (err || student == null) {
             return res.status(404).send();
         } else {
-            student.studentInfo.appointment.status = 'waiting';
-            user.set(student);
-            user.save()
-                .then( _  => {
-                    res.status(201).json({
-                        type: 'msg',
-                        style:{
-                            "background-color": "#98FB98",
-                            "text-align": "center",
-                        },
-                        title: "Rendez-vous BRI",
-                        message: `Vous êtes bien inscrit à la file d'attente`
+            if(student.studentInfo.appointment.status === "none"){
+                student.studentInfo.appointment.status = 'waiting';
+                user.set(student);
+                user.save()
+                    .then( _  => {
+                        return res.status(201).json({
+                            type: 'msg',
+                            style:{
+                                "background-color": "#98FB98",
+                                "text-align": "center",
+                            },
+                            title: "Rendez-vous BRI",
+                            message: `Vous êtes bien inscrit à la file d'attente`
+                        })
                     })
+                    .catch( err => res.status(400).json(err));
+            } else {
+                return res.status(201).json({
+                    type: 'msg',
+                    style:{
+                        "background-color": "red",
+                        "text-align": "center",
+                    },
+                    title: "Rendez-vous BRI",
+                    message: `Vous êtes déjà inscrit à la file d'attente ou avez déjà réalisé votre rendez-vous`
                 })
-                .catch( err => res.status(400).json(err));
+            }
         }
     });
 };
