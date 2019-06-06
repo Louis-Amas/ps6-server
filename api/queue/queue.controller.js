@@ -8,7 +8,7 @@ exports.getStudentForm = (req,res) => {
                type: "input",
                formatType: "email",
                showedName: "Email",
-               value: "email"
+               value: "email@test.com"
             },
             {
                 type: "input",
@@ -18,7 +18,7 @@ exports.getStudentForm = (req,res) => {
             }
         ],
         headers: {
-            "Authorisation": "$email:$password"
+            Authorization: "$email?:$password?"
         }
   });
 };
