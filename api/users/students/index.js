@@ -18,6 +18,11 @@ router.get('/status/:status', [
   StudentController.getStudentsByValidateStatus
 ]);
 
+
+router.get('/query', [
+    StudentController.getStudentByQuery
+]);
+
 router.get('/wishes/university/:univId', [
   StudentController.getStudentByUnivWishes
 ]);
