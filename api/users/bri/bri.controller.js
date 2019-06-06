@@ -236,7 +236,10 @@ exports.getTodayAppointment = (req,res) => {
                                 const color = chooseColorSwitchStatus(av.reservedBy.studentInfo.appointment.status);
                                 result.push({
                                     allElem: {
-                                        "background_color": color
+                                        "background-color": color,
+                                        "font-family": "Helvetica",
+                                        "font-weight": "bold",
+                                        "text-align": "center"
                                     },
                                     "departureTime": {
                                         "value": av.slot.departureTime.getHours() + "H " + av.slot.departureTime.getMinutes() + "mn",
@@ -265,6 +268,7 @@ exports.getTodayAppointment = (req,res) => {
                 }
                 return res.status(200).json({
                     "type": "list",
+                    "title": "Vos rendez-vous du jour",
                     "queue": result
                 });
             }

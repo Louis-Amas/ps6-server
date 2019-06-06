@@ -252,6 +252,11 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
                 .then( _  => {
                     res.status(201).json({
                         type: 'msg',
+                        style:{
+                            "background-color": "#98FB98",
+                            "text-align": "center",
+                        },
+                        title: "Rendez-vous BRI",
                         message: `Vous êtes bien inscrit à la file d'attente`
                     })
                 })
