@@ -255,9 +255,16 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
                 student.studentInfo.appointment.status = 'waiting';
                 user.set(student);
                 user.save()
-                    .then( _  => {
+                    .then( s  => {
                         return res.status(201).json({
                             type: 'msg',
+                            body: {
+                              "studentId": s._id
+                            },
+                            mqtt:{
+                                msg: "studentId",
+                                request: "/ionic/arrive"
+                            },
                             style:{
                                 "background-color": "#98FB98",
                                 "text-align": "center",
@@ -270,6 +277,13 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
             } else {
                 return res.status(201).json({
                     type: 'msg',
+                    body: {
+                        "studentId": student._id
+                    },
+                    mqtt:{
+                        msg: "studentId",
+                        request: "/ionic/arrive"
+                    },
                     style:{
                         "background-color": "red",
                         "text-align": "center",
