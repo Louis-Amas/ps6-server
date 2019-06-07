@@ -215,14 +215,13 @@ exports.getDelay = (req,res) => {
                                 "font-size": "25px",
                             },
                             message: "Pas d'étudiant en liste d'attente",
-                            delay: 0,
+                            delay: '0000',
                         })
                     }
                     else {
                         const del = now.getTime() - endTime.getTime();
                         const del1 = msToTime(del);
-                        console.log(msToTime(now.getTime()));
-                        console.log(msToTime(endTime.getTime()));
+                        const delayRasp = del1.toString().slice(0,2) + del1.toString().slice(3,5);
                         // console.log(del1);
                         return res.status(200).json({
                             type: 'msg',
@@ -231,7 +230,7 @@ exports.getDelay = (req,res) => {
                                 "font-size": "25px",
                             },
                             message: "Vous avez un retard de " + del1,
-                            delay: del1,
+                            delay: delayRasp,
                         })
                     }
 
