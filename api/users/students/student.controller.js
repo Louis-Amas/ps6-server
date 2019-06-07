@@ -268,6 +268,7 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
                             style:{
                                 "background-color": "#98FB98",
                                 "text-align": "center",
+                                "font-size": "25px",
                             },
                             title: "Rendez-vous BRI",
                             message: `Vous êtes bien inscrit à la file d'attente`
@@ -280,6 +281,7 @@ exports.updateConnectedStudentToWaiting = (req, res) => {
                     style:{
                         "background-color": "red",
                         "text-align": "center",
+                        "font-size": "25px",
                     },
                     title: "Rendez-vous BRI",
                     message: `Vous êtes déjà inscrit à la file d'attente ou avez déjà réalisé votre rendez-vous`

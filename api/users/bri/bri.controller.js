@@ -195,23 +195,44 @@ exports.getDelay = (req,res) => {
                         const dateApp = new Date(app.timeSlot.departureTime);
                         return dateApp.getDate() === now.getDate() && dateApp.getMonth() === now.getMonth() && dateApp.getFullYear() === now.getFullYear();
                     });
-                    let endTime = new Date(0);
-                    todayAppointments.forEach(app =>
-                        app.available.forEach( av =>{
+                    let endTime = 0;
+                    for (let app of todayAppointments) {
+                        for (let av of app.available) {
                             const stud = av.reservedBy;
                             if(stud !== undefined){
                                 if(stud.studentInfo.appointment.status === 'waiting'){
                                     endTime = stud.studentInfo.appointment.timeSlot.departureTime;
+                                    console.log('la');
                                 }
                             }
-                        }));
-                    if(endTime === new Date(0)) {
-                        return res.status(400).send();
+                        }}
+                    console.log(endTime);
+                    if(endTime === 0) {
+                        return res.status(200).json({
+                            type: 'msg',
+                            style:{
+                                "text-align": "center",
+                                "font-size": "25px",
+                            },
+                            message: "Pas d'étudiant en liste d'attente",
+                            delay: 0,
+                        })
                     }
                     else {
                         const del = now.getTime() - endTime.getTime();
                         const del1 = msToTime(del);
-                        return res.status(200).json({delay: del1})
+                        console.log(msToTime(now.getTime()));
+                        console.log(msToTime(endTime.getTime()));
+                        // console.log(del1);
+                        return res.status(200).json({
+                            type: 'msg',
+                            style:{
+                                "text-align": "center",
+                                "font-size": "25px",
+                            },
+                            message: "Vous avez un retard de " + del1,
+                            delay: del1,
+                        })
                     }
 
             }
