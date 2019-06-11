@@ -74,10 +74,6 @@ const StudentSchema = new Schema({
           type: String,
           required: [true, 'Attachement name is required']
         },
-        document: {
-          type: String,
-          required: [true, 'Document type is required']
-        },
         data: {
           type: String,
           require: [true, 'data is needed']
